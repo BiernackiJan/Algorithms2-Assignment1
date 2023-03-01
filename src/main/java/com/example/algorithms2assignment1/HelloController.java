@@ -82,7 +82,7 @@ public class HelloController {
         imageAdjust();
     }
 
-    public void imageAdjust(){
+    public void imageAdjust(){//TODO: refactor this code to change image to dark background and bright white spots
         int height = (int) defaultImage.getHeight();
         int width = (int) defaultImage.getWidth();
         PixelReader pixelReader = defaultImage.getPixelReader();
