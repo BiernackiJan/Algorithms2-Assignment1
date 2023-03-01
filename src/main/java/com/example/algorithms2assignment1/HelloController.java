@@ -79,7 +79,174 @@ public class HelloController {
         defaultImage = image1;
         writableImage1 = writableImage;
 
+        imageAdjust();
     }
+
+    public void imageAdjust(){
+        int height = (int) defaultImage.getHeight();
+        int width = (int) defaultImage.getWidth();
+        PixelReader pixelReader = defaultImage.getPixelReader();
+        PixelWriter pixelWriter = writableImage1.getPixelWriter();
+        int value = 0;
+        int value1 = 255;
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Color color = pixelReader.getColor(x, y);
+                int red = (int) (color.getRed() * value);
+                int green = (int) (color.getGreen() * value);
+                int blue = (int) (color.getBlue() * value);
+                Color color1 = Color.rgb(red, green, blue);
+                pixelWriter.setColor(x, y, color1.saturate());
+
+                Color color2 = pixelReader.getColor(x, y).grayscale();
+                pixelWriter.setColor(x, y, color2);
+            }
+        }
+    }
+
+    /*public static void main(String[] args) { //TODO: refactor this code to analyse the image
+        // Load the image from a file or create a new image.
+        WritableImage image = new WritableImage(width, height);
+
+        // Initialize the UnionFind data structure.
+        UnionFind uf = new UnionFind(width * height);
+
+        // Iterate over each pixel in the image.
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                // Check if the pixel is a star.
+                if (isStar(image, x, y)) {
+                    // Add the pixel to the UnionFind data structure.
+                    int index = y * width + x;
+                    uf.union(index, index);
+
+                    // Check the neighboring pixels and union them if they are stars.
+                    for (int dy = -1; dy <= 1; dy++) {
+                        for (int dx = -1; dx <= 1; dx++) {
+                            if (dx == 0 && dy == 0) continue;
+                            int nx = x + dx;
+                            int ny = y + dy;
+                            if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+                            if (isStar(image, nx, ny)) {
+                                int nindex = ny * width + nx;
+                                uf.union(index, nindex);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Get the sets of pixels that are part of each union.
+        List<Set<Integer>> sets = uf.getSets();
+
+        // Extract the sub-images corresponding to each union.
+        List<WritableImage> subImages = new ArrayList<>();
+        for (Set<Integer> set : sets) {
+            int xmin = width;
+            int xmax = 0;
+            int ymin = height;
+            int ymax = 0;
+            for (int index : set) {
+                int x = index % width;
+                int y = index / width;
+                xmin = Math.min(xmin, x);
+                xmax = Math.max(xmax, x);
+                ymin = Math.min(ymin, y);
+                ymax = Math.max(ymax, y);
+            }
+            int sw = xmax - xmin + 1;
+            int sh = ymax - ymin + 1;
+            WritableImage subImage = new WritableImage(sw, sh);
+            PixelWriter writer = subImage.getPixelWriter();
+            for (int index : set) {
+                int x = index % width;
+                int y = index / width;
+                int sx = x - xmin;
+                int sy = y - ymin;
+                Color color = image.getPixelReader().getColor(x, y);
+                writer.setColor(sx, sy, color);
+            }
+            subImages.add(subImage);
+        }
+
+        // Do something with the sub-images.
+        for (WritableImage subImage : subImages) {
+            // ...
+        }
+    }
+
+    public static boolean isStar(WritableImage image, int x, int y) {
+        // Check if the pixel at (x, y) is a star.
+        // ...
+    }
+
+    TODO: This one stores the location of each found star
+    public static void main(String[] args) {
+        // Load the image from a file or create a new image.
+        Image image = new Image("stars.png");
+
+        // Initialize the UnionFind data structure.
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+        UnionFind uf = new UnionFind(width * height);
+
+        // Iterate over each pixel in the image.
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                // Check if the pixel is a star.
+                if (isStar(image, x, y)) {
+                    // Add the pixel to the UnionFind data structure.
+                    int index = y * width + x;
+                    uf.union(index, index);
+
+                    // Check the neighboring pixels and union them if they are stars.
+                    for (int dy = -1; dy <= 1; dy++) {
+                        for (int dx = -1; dx <= 1; dx++) {
+                            if (dx == 0 && dy == 0) continue;
+                            int nx = x + dx;
+                            int ny = y + dy;
+                            if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+                            if (isStar(image, nx, ny)) {
+                                int nindex = ny * width + nx;
+                                uf.union(index, nindex);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Get the sets of pixels that are part of each union.
+        List<Set<Integer>> sets = uf.getSets();
+
+        // Store the locations of each union in the original image.
+        List<List<Point2D>> unionLocations = new ArrayList<>();
+        for (Set<Integer> set : sets) {
+            List<Point2D> locations = new ArrayList<>();
+            for (int index : set) {
+                int x = index % width;
+                int y = index / width;
+                locations.add(new Point2D(x, y));
+            }
+            unionLocations.add(locations);
+        }
+
+        // Do something with the union locations.
+        for (List<Point2D> locations : unionLocations) {
+            // ...
+        }
+    }
+
+    public static boolean isStar(Image image, int x, int y) {
+        // Check if the pixel at (x, y) is a star.
+        // ...
+    }
+
+
+
+    */
 
 
 
