@@ -3,8 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Slider?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -72,25 +70,17 @@
         </VBox>
         <StackPane layoutX="258.0" prefHeight="576.0" prefWidth="793.0" style="-fx-background-color: #02030A;">
             <children>
-                <Pane fx:id="pnlOverview" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" visible="false">
+                <Pane fx:id="pnlOverview" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cbd0d1" height="321.0" layoutX="125.0" layoutY="122.0" stroke="BLACK" strokeType="INSIDE" width="272.0" />
-                  <ImageView fx:id="image" fitHeight="321.0" fitWidth="272.0" layoutX="125.0" layoutY="122.0" pickOnBounds="true" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cbd0d1" height="321.0" layoutX="60.0" layoutY="122.0" stroke="BLACK" strokeType="INSIDE" width="309.0" />
+                  <ImageView fx:id="image" fitHeight="321.0" fitWidth="309.0" layoutX="60.0" layoutY="122.0" pickOnBounds="true" />
                   <ComboBox id="btnBrighter" fx:id="imageOption" layoutX="312.0" layoutY="36.0" onAction="#imageChoose" prefHeight="29.0" prefWidth="170.0" stylesheets="@style.css" />
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cbd0d1" height="321.0" layoutX="459.0" layoutY="122.0" stroke="BLACK" strokeType="INSIDE" width="272.0" />
-                  <ImageView fx:id="editedImage" fitHeight="321.0" fitWidth="272.0" layoutX="459.0" layoutY="122.0" pickOnBounds="true" />
-                  <Button layoutX="24.0" layoutY="122.0" mnemonicParsing="false" onAction="#redImage" prefHeight="29.0" prefWidth="87.0" stylesheets="@style.css" text="Red" />
-                  <Button layoutX="24.0" layoutY="157.0" mnemonicParsing="false" onAction="#greenImage" prefHeight="29.0" prefWidth="87.0" stylesheets="@style.css" text="Green" />
-                  <Button layoutX="24.0" layoutY="193.0" mnemonicParsing="false" onAction="#blueImage" prefHeight="29.0" prefWidth="87.0" stylesheets="@style.css" text="Blue" />
-                  <Button layoutX="24.0" layoutY="230.0" mnemonicParsing="false" onAction="#grayImage" prefHeight="29.0" prefWidth="87.0" stylesheets="@style.css" text="Gray" />
-                  <Slider fx:id="brightness" layoutX="534.0" layoutY="505.0" max="255.0" onMouseClicked="#imageBrightness" onMouseDragged="#imageBrightness" prefHeight="14.0" prefWidth="194.0" value="127.5" />
-                  <Slider fx:id="saturation" layoutX="534.0" layoutY="479.0" max="255.0" onMouseClicked="#imageSaturation" onMouseDragged="#imageSaturation" prefHeight="14.0" prefWidth="194.0" value="127.5" />
-                  <Label alignment="CENTER" layoutX="462.0" layoutY="506.0" prefHeight="17.0" prefWidth="67.0" text="Brightness" textFill="WHITE" />
-                  <Label alignment="CENTER" layoutX="462.0" layoutY="477.0" prefHeight="17.0" prefWidth="67.0" text="Saturation" textFill="WHITE" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cbd0d1" height="321.0" layoutX="422.0" layoutY="122.0" stroke="BLACK" strokeType="INSIDE" width="309.0" />
+                  <ImageView fx:id="editedImage" fitHeight="321.0" fitWidth="309.0" layoutX="422.0" layoutY="122.0" pickOnBounds="true" />
                   <Button layoutX="353.0" layoutY="485.0" mnemonicParsing="false" onAction="#reset" prefHeight="29.0" prefWidth="87.0" stylesheets="@style.css" text="Reset Image" />
                </children>
                 </Pane>
-                <Pane fx:id="pnlSearch" prefHeight="200.0" prefWidth="200.0" />
+                <Pane fx:id="pnlSearch" prefHeight="200.0" prefWidth="200.0" visible="false" />
             </children>
         </StackPane>
     </children>

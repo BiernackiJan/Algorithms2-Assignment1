@@ -95,133 +95,133 @@ public class HelloController {
 
 
 
-    public void redImage (ActionEvent event) {
-
-        int height = (int) defaultImage.getHeight();
-        int width = (int) defaultImage.getWidth();
-        PixelReader pixelReader = defaultImage.getPixelReader();
-        PixelWriter pixelWriter = writableImage1.getPixelWriter();
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Color color = pixelReader.getColor(x, y);
-                int green = (int) (color.getGreen() * 255);
-                int blue = (int) (color.getBlue() * 255);
-                Color color2 = Color.rgb(255, green, blue);
-
-
-                pixelWriter.setColor(x, y, color2);
-
-            }
-        }
-
-    }
-
-    public void greenImage(ActionEvent actionEvent){
-
-        int height = (int) defaultImage.getHeight();
-        int width = (int) defaultImage.getWidth();
-        PixelReader pixelReader = defaultImage.getPixelReader();
-        PixelWriter pixelWriter = writableImage1.getPixelWriter();
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Color color = pixelReader.getColor(x, y);
-                int red = (int) (color.getRed() * 255);
-                int blue = (int) (color.getBlue() * 255);
-                Color color1 = Color.rgb(red, 255, blue);
-
-
-                pixelWriter.setColor(x, y, color1);
-
-            }
-        }
-    }
-
-    public void blueImage(ActionEvent actionEvent){
-
-        int height = (int) defaultImage.getHeight();
-        int width = (int) defaultImage.getWidth();
-        PixelReader pixelReader = defaultImage.getPixelReader();
-        PixelWriter pixelWriter = writableImage1.getPixelWriter();
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Color color = pixelReader.getColor(x, y);
-                int red = (int) (color.getRed() * 255);
-                int green = (int) (color.getGreen() * 255);
-                Color color1 = Color.rgb(red, green, 255);
-
-
-                pixelWriter.setColor(x, y, color1);
-
-            }
-        }
-    }
-
-    public void grayImage(ActionEvent event){
-        int height = (int) defaultImage.getHeight();
-        int width = (int) defaultImage.getWidth();
-        PixelReader pixelReader = defaultImage.getPixelReader();
-        PixelWriter pixelWriter = writableImage1.getPixelWriter();
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Color color = pixelReader.getColor(x, y).grayscale();
-
-
-                pixelWriter.setColor(x, y, color);
-
-            }
-        }
-    }
-
-
-    @FXML
-    private Slider brightness;
-    @FXML
-    private Slider saturation;
-
-    public void imageBrightness() {
-        int height = (int) defaultImage.getHeight();
-        int width = (int) defaultImage.getWidth();
-        PixelReader pixelReader = defaultImage.getPixelReader();
-        PixelWriter pixelWriter = writableImage1.getPixelWriter();
-        int value = (int) brightness.getValue();
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Color color = pixelReader.getColor(x, y);
-                int red = (int) (color.getRed() * value);
-                int green = (int) (color.getGreen() * value);
-                int blue = (int) (color.getBlue() * value);
-                Color color1 = Color.rgb(red, green, blue);
-
-                pixelWriter.setColor(x, y, color1.brighter());
-            }
-        }
-
-    }
-
-    public void imageSaturation(){
-        int height = (int) defaultImage.getHeight();
-        int width = (int) defaultImage.getWidth();
-        PixelReader pixelReader = defaultImage.getPixelReader();
-        PixelWriter pixelWriter = writableImage1.getPixelWriter();
-        int value = (int) saturation.getValue();
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Color color = pixelReader.getColor(x, y);
-                int red = (int) (color.getRed() * value);
-                int green = (int) (color.getGreen() * value);
-                int blue = (int) (color.getBlue() * value);
-                Color color1 = Color.rgb(red, green, blue);
-
-                pixelWriter.setColor(x, y, color1.saturate());
-            }
-        }
-    }
+//    public void redImage (ActionEvent event) {
+//
+//        int height = (int) defaultImage.getHeight();
+//        int width = (int) defaultImage.getWidth();
+//        PixelReader pixelReader = defaultImage.getPixelReader();
+//        PixelWriter pixelWriter = writableImage1.getPixelWriter();
+//
+//        for (int y = 0; y < height; y++) {
+//            for (int x = 0; x < width; x++) {
+//                Color color = pixelReader.getColor(x, y);
+//                int green = (int) (color.getGreen() * 255);
+//                int blue = (int) (color.getBlue() * 255);
+//                Color color2 = Color.rgb(255, green, blue);
+//
+//
+//                pixelWriter.setColor(x, y, color2);
+//
+//            }
+//        }
+//
+//    }
+//
+//    public void greenImage(ActionEvent actionEvent){
+//
+//        int height = (int) defaultImage.getHeight();
+//        int width = (int) defaultImage.getWidth();
+//        PixelReader pixelReader = defaultImage.getPixelReader();
+//        PixelWriter pixelWriter = writableImage1.getPixelWriter();
+//
+//        for (int y = 0; y < height; y++) {
+//            for (int x = 0; x < width; x++) {
+//                Color color = pixelReader.getColor(x, y);
+//                int red = (int) (color.getRed() * 255);
+//                int blue = (int) (color.getBlue() * 255);
+//                Color color1 = Color.rgb(red, 255, blue);
+//
+//
+//                pixelWriter.setColor(x, y, color1);
+//
+//            }
+//        }
+//    }
+//
+//    public void blueImage(ActionEvent actionEvent){
+//
+//        int height = (int) defaultImage.getHeight();
+//        int width = (int) defaultImage.getWidth();
+//        PixelReader pixelReader = defaultImage.getPixelReader();
+//        PixelWriter pixelWriter = writableImage1.getPixelWriter();
+//
+//        for (int y = 0; y < height; y++) {
+//            for (int x = 0; x < width; x++) {
+//                Color color = pixelReader.getColor(x, y);
+//                int red = (int) (color.getRed() * 255);
+//                int green = (int) (color.getGreen() * 255);
+//                Color color1 = Color.rgb(red, green, 255);
+//
+//
+//                pixelWriter.setColor(x, y, color1);
+//
+//            }
+//        }
+//    }
+//
+//    public void grayImage(ActionEvent event){
+//        int height = (int) defaultImage.getHeight();
+//        int width = (int) defaultImage.getWidth();
+//        PixelReader pixelReader = defaultImage.getPixelReader();
+//        PixelWriter pixelWriter = writableImage1.getPixelWriter();
+//
+//        for (int y = 0; y < height; y++) {
+//            for (int x = 0; x < width; x++) {
+//                Color color = pixelReader.getColor(x, y).grayscale();
+//
+//
+//                pixelWriter.setColor(x, y, color);
+//
+//            }
+//        }
+//    }
+//
+//
+//    @FXML
+//    private Slider brightness;
+//    @FXML
+//    private Slider saturation;
+//
+//    public void imageBrightness() {
+//        int height = (int) defaultImage.getHeight();
+//        int width = (int) defaultImage.getWidth();
+//        PixelReader pixelReader = defaultImage.getPixelReader();
+//        PixelWriter pixelWriter = writableImage1.getPixelWriter();
+//        int value = (int) brightness.getValue();
+//
+//        for (int y = 0; y < height; y++) {
+//            for (int x = 0; x < width; x++) {
+//                Color color = pixelReader.getColor(x, y);
+//                int red = (int) (color.getRed() * value);
+//                int green = (int) (color.getGreen() * value);
+//                int blue = (int) (color.getBlue() * value);
+//                Color color1 = Color.rgb(red, green, blue);
+//
+//                pixelWriter.setColor(x, y, color1.brighter());
+//            }
+//        }
+//
+//    }
+//
+//    public void imageSaturation(){
+//        int height = (int) defaultImage.getHeight();
+//        int width = (int) defaultImage.getWidth();
+//        PixelReader pixelReader = defaultImage.getPixelReader();
+//        PixelWriter pixelWriter = writableImage1.getPixelWriter();
+//        int value = (int) saturation.getValue();
+//
+//        for (int y = 0; y < height; y++) {
+//            for (int x = 0; x < width; x++) {
+//                Color color = pixelReader.getColor(x, y);
+//                int red = (int) (color.getRed() * value);
+//                int green = (int) (color.getGreen() * value);
+//                int blue = (int) (color.getBlue() * value);
+//                Color color1 = Color.rgb(red, green, blue);
+//
+//                pixelWriter.setColor(x, y, color1.saturate());
+//            }
+//        }
+//    }
 
 
 
@@ -233,8 +233,8 @@ public class HelloController {
         int width = (int) defaultImage.getWidth();
         PixelReader pixelReader = defaultImage.getPixelReader();
         PixelWriter pixelWriter = writableImage1.getPixelWriter();
-        brightness.setValue(127.5);
-        saturation.setValue(127.5);
+//        brightness.setValue(127.5);
+//        saturation.setValue(127.5);
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -251,7 +251,7 @@ public class HelloController {
 
     @FXML
     public void initialize(){
-        imageOption.getItems().addAll("Open New Image", "Open");
+        imageOption.getItems().addAll("Open");
     }
 
 
