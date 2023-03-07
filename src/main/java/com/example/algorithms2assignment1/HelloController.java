@@ -76,39 +76,100 @@ public class HelloController {
         }
 
         editedImage.setImage(writableImage);
-        defaultImage = image1;
-        writableImage1 = writableImage;
 
-        imageAdjust();
+        writableImage1 = writableImage;
     }
 
+    @FXML
+    private Slider threshholdChange;
+
     public void imageAdjust(){//TODO: refactor this code to change image to dark background and bright white spots
+        defaultImage = image.getImage();
         int height = (int) defaultImage.getHeight();
         int width = (int) defaultImage.getWidth();
         PixelReader pixelReader = defaultImage.getPixelReader();
         PixelWriter pixelWriter = writableImage1.getPixelWriter();
-        int value = 0;
-        int value1 = 255;
+        double threshold = threshholdChange.getValue()/50; // Adjust this threshold as needed
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 Color color = pixelReader.getColor(x, y);
-                int red = (int) (color.getRed() * value);
-                int green = (int) (color.getGreen() * value);
-                int blue = (int) (color.getBlue() * value);
-                Color color1 = Color.rgb(red, green, blue);
-                pixelWriter.setColor(x, y, color1.saturate());
-
-                Color color2 = pixelReader.getColor(x, y).grayscale();
-                pixelWriter.setColor(x, y, color2);
+                if (color.getBrightness() > threshold) {
+                    pixelWriter.setColor(x, y, Color.WHITE);
+                } else {
+                    pixelWriter.setColor(x, y, Color.BLACK);
+                }
             }
         }
+//        int height = (int) defaultImage.getHeight();
+//        int width = (int) defaultImage.getWidth();
+//        PixelReader pixelReader = defaultImage.getPixelReader();
+//        PixelWriter pixelWriter = writableImage1.getPixelWriter();
+//        int value = 0;
+//        int value1 = 255;
+//
+//        for (int y = 0; y < height; y++) {
+//            for (int x = 0; x < width; x++) {
+//                Color color = pixelReader.getColor(x, y);
+//                int red = (int) (color.getRed() * value);
+//                int green = (int) (color.getGreen() * value);
+//                int blue = (int) (color.getBlue() * value);
+//                Color color1 = Color.rgb(red, green, blue);
+//                pixelWriter.setColor(x, y, color1.darker());
+//
+//                Color color2 = pixelReader.getColor(x, y).grayscale();
+//                pixelWriter.setColor(x, y, color2);
+//            }
+//        }
     }
 
-    /*public static void main(String[] args) { //TODO: refactor this code to analyse the image
-        // Load the image from a file or create a new image.
-        WritableImage image = new WritableImage(width, height);
+    public void adjust(ActionEvent actionEvent) {
+        imageAdjust();
+    }
 
+
+    public void analyze(ActionEvent actionEvent) {
+        int width = (int) writableImage1.getWidth();
+        int height = (int) writableImage1.getHeight();
+
+        PixelReader pixelReader = writableImage1.getPixelReader();
+        double threshold = threshholdChange.getValue()/50;
+
+        //initialize the UnionAlgorithm
+        UnionAlgo u = new UnionAlgo( width * height);
+
+
+        UnionAlgo disjointSet = new UnionAlgo(height * width);
+
+        // Iterate through each pixel and merge sets for neighboring stars
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Color color = pixelReader.getColor(x, y);
+                int pixelIndex = y * width + x;
+
+                if (color.getBrightness() > threshold) {
+                    // Merge with neighboring stars
+                    if (x > 0 && pixelReader.getColor(x-1, y).getBrightness() > threshold) {
+                        disjointSet.union(pixelIndex, pixelIndex-1);
+                    }
+                    if (y > 0 && pixelReader.getColor(x, y-1).getBrightness() > threshold) {
+                        disjointSet.union(pixelIndex, pixelIndex-width);
+                    }
+                    if (x < width-1 && pixelReader.getColor(x+1, y).getBrightness() > threshold) {
+                        disjointSet.union(pixelIndex, pixelIndex+1);
+                    }
+                    if (y < height-1 && pixelReader.getColor(x, y+1).getBrightness() > threshold) {
+                        disjointSet.union(pixelIndex, pixelIndex+width);
+                    }
+                }
+            }
+        }
+
+
+
+
+    }
+    /*public static void main(String[] args) { //TODO: refactor this code to analyse the image
         // Initialize the UnionFind data structure.
         UnionFind uf = new UnionFind(width * height);
 
