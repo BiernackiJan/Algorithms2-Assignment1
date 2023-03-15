@@ -53,13 +53,13 @@ public class HelloController {
     private WritableImage writableImage1;
     @FXML
     ImageView image;
-
     @FXML
     ImageView editedImage;
     public void fileChooser(){
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-        File file = fileChooser.showOpenDialog(null);
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Resource File");
+//        File file = fileChooser.showOpenDialog(null);
+        File file = new File("C:\\Users\\janbi\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
         Image image1 = new Image(String.valueOf(file));
         image.setImage(image1);
 
@@ -84,7 +84,7 @@ public class HelloController {
     @FXML
     private Slider threshholdChange;
 
-    public void imageAdjust(){//TODO: refactor this code to change image to dark background and bright white spots
+    public void imageAdjust(){
         defaultImage = image.getImage();
         int height = (int) defaultImage.getHeight();
         int width = (int) defaultImage.getWidth();
@@ -102,6 +102,7 @@ public class HelloController {
                 }
             }
         }
+
     }
 
     public void adjust(ActionEvent actionEvent) {
@@ -110,38 +111,16 @@ public class HelloController {
 
 
     public void analyze(ActionEvent actionEvent) {
-        int width = (int) writableImage1.getWidth();
-        int height = (int) writableImage1.getHeight();
-
-        PixelReader pixelReader = writableImage1.getPixelReader();
-        double threshold = threshholdChange.getValue()/50;
-
-        int[][] imageArray = new int[width][height];
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Color color = pixelReader.getColor(x, y);
-                if (color.getBrightness() > threshold) {
-                    imageArray[x][y] = 1;
-                } else {
-                    imageArray[x][y] = 0;
-                }
-            }
-        }
+        ImageAdjustments adjustments = new ImageAdjustments();
+        adjustments.segmentImage(defaultImage,editedImage);
 
         //TODO: analyze imageArray to find the number of objects in the image
-        for(int i = 0; i < width; i++){
-            for(int j = 0; j < height; j++){
-                if(imageArray[i][j] == 1){
-
-                }
-            }
-        }
-
 //        for(int i = 0; i < width; i++){
 //            for(int j = 0; j < height; j++){
-//                System.out.print(imageArray[i][j]);
+//                if(imageArray[i][j] == 1){
+//
+//                }
 //            }
-//            System.out.println();
 //        }
     }
 
