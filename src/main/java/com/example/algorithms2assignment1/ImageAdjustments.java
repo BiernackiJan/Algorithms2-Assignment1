@@ -22,7 +22,7 @@ public class ImageAdjustments {
         WritableImage labelImage = new WritableImage(width, height);
 
         // Create a PixelWriter object to write label values to the new WritableImage
-        PixelWriter pixelWriter = labelImage.getPixelWriter();
+//        PixelWriter pixelWriter = labelImage.getPixelWriter();
 
         imagePixels = new int[ width * height];                                                          // Array to store the pixel values of the image (used for union-find)
 
