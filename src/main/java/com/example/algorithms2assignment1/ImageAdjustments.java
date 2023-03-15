@@ -13,33 +13,35 @@ public class ImageAdjustments {
 
 
     int imagePixels[];
-    public void segmentImage(Image imageStandard, ImageView imageView1) {
+    public void segmentImage(Image imageStandard, double threshold) {
         // Get the height and width of the image
         int height = (int) imageStandard.getHeight();
         int width = (int) imageStandard.getWidth();
 
-        // Create a PixelReader object to read the pixel values of the imageStandard
-        PixelReader pixelReader = imageStandard.getPixelReader();
-
-        // Create a new WritableImage object with the same height and width as the imageStandard
+        PixelReader imageReader = imageStandard.getPixelReader();
         WritableImage labelImage = new WritableImage(width, height);
 
         // Create a PixelWriter object to write label values to the new WritableImage
         PixelWriter pixelWriter = labelImage.getPixelWriter();
-         // This value can be adjusted to control the threshold
 
         imagePixels = new int[ width * height];                                                          // Array to store the pixel values of the image (used for union-find)
 
         for (int y = 0; y < height; y++) { //row
             for (int x = 0; x < width; x++) { //column
                 // Get the color of the current pixel
-                Color color = pixelReader.getColor(x, y);
+                Color color = imageReader.getColor(x, y);
 
-                if (color == Color.BLACK) {
+                double grayscale = color.getRed() * 0.299 + color.getGreen() * 0.587 + color.getBlue() * 0.114; // Convert the color to grayscale
+                Color whiteBlack = grayscale > threshold ? Color.WHITE : Color.BLACK; // Convert the grayscale to black and white
+
+
+                if (whiteBlack == Color.BLACK) {
                     // This pixel belongs to the background
-                    imagePixels[y * width + x] = -1;                                                     // Set the pixel value to -1 (background)
+                    imagePixels[y * width + x] = -1;
+                    //pixelWriter.setColor(x, y, Color.BLACK);
                 } else {
-                    imagePixels[y * width + x] = y* width + x;                                           // Set the pixel value to the index of the pixel in the array (foreground)
+                    imagePixels[y * width + x] = y* width + x;    // Set the pixel value to the index of the pixel in the array (foreground)
+                    //pixelWriter.setColor(x, y, Color.WHITE);
                 }
             }
         }
@@ -49,23 +51,11 @@ public class ImageAdjustments {
         HashMap<Integer, List<Integer>> valueMap = createLabelMap(width).get("valueMap");
         HashMap<Integer, Integer> sizeMap = createSizeMap(width);
 
-        //drawCirclesAroundSpots(spotMap, labelImage, Color.BLUE, 20);
-
 //        countSpots(spotMap);
-//        System.out.println("Number of spots: " + countSpots(spotMap));
-//        System.out.println("Label Map:");
         System.out.println(spotMap);
         System.out.println("Value Set Map:");
-//        System.out.println(valueMap);
-//        System.out.println("Size of the spots:");
-//        System.out.println(sizeMap);
 //        sortSpotsBySize(width,minSize);
         printUnionArray(width);
-
-        // Set the new image to the ImageView
-        imageView1.setImage(labelImage);
-
-
     }
 
 

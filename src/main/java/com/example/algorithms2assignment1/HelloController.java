@@ -56,10 +56,10 @@ public class HelloController {
     @FXML
     ImageView editedImage;
     public void fileChooser(){
-//        FileChooser fileChooser = new FileChooser();
-//        fileChooser.setTitle("Open Resource File");
-//        File file = fileChooser.showOpenDialog(null);
-        File file = new File("C:\\Users\\janbi\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        File file = fileChooser.showOpenDialog(null);
+//        File file = new File("C:\\Users\\janbi\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
         Image image1 = new Image(String.valueOf(file));
         image.setImage(image1);
 
@@ -76,16 +76,15 @@ public class HelloController {
             }
         }
 
-        editedImage.setImage(writableImage);
-
+        defaultImage = image1;
         writableImage1 = writableImage;
+        editedImage.setImage(writableImage1);
     }
 
     @FXML
     private Slider threshholdChange;
 
     public void imageAdjust(){
-        defaultImage = image.getImage();
         int height = (int) defaultImage.getHeight();
         int width = (int) defaultImage.getWidth();
         PixelReader pixelReader = defaultImage.getPixelReader();
@@ -112,7 +111,7 @@ public class HelloController {
 
     public void analyze(ActionEvent actionEvent) {
         ImageAdjustments adjustments = new ImageAdjustments();
-        adjustments.segmentImage(defaultImage,editedImage);
+        adjustments.segmentImage(writableImage1,threshholdChange.getValue()/50);
 
         //TODO: analyze imageArray to find the number of objects in the image
 //        for(int i = 0; i < width; i++){
