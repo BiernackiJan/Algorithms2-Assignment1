@@ -58,8 +58,12 @@ public class HelloController {
     public void fileChooser(){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
-        File file = fileChooser.showOpenDialog(null);
+        //File file = fileChooser.showOpenDialog(null);
+        //laptop
 //        File file = new File("C:\\Users\\janbi\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
+        //PC
+        File file = new File("C:\\Users\\Jan\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
+
         Image image1 = new Image(String.valueOf(file));
         image.setImage(image1);
 
@@ -111,7 +115,7 @@ public class HelloController {
 
     public void analyze(ActionEvent actionEvent) {
         ImageAdjustments adjustments = new ImageAdjustments();
-        adjustments.segmentImage(writableImage1,threshholdChange.getValue()/50);
+        adjustments.segmentImage(defaultImage,editedImage,threshholdChange.getValue()/50);
 
         //TODO: analyze imageArray to find the number of objects in the image
 //        for(int i = 0; i < width; i++){
@@ -123,6 +127,17 @@ public class HelloController {
 //        }
     }
 
+
+    @FXML
+    ImageView circledImage;
+    public void drawCircle(ActionEvent actionEvent){
+//        WritableImage circleImage = new WritableImage(writableImage1.getPixelReader(), (int)writableImage1.getWidth(), (int)writableImage1.getHeight());
+//        circledImage.setImage(circleImage);
+//
+//        ImageAdjustments adjustments = new ImageAdjustments();
+//        adjustments.segmentImage(writableImage1,threshholdChange.getValue()/50);
+//        adjustments.drawCircleAroundSpots(writableImage1);
+    }
 
     @FXML
     private ComboBox<String> imageOption;

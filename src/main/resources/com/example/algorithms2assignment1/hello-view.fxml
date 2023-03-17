@@ -82,9 +82,14 @@
                   <Slider fx:id="threshholdChange" layoutX="507.0" layoutY="456.0" max="50.0" value="1.0" />
                   <Button layoutX="353.0" layoutY="484.0" mnemonicParsing="false" onAction="#adjust" prefHeight="29.0" prefWidth="87.0" stylesheets="@style.css" text="Adjust Image" />
                   <Button layoutX="448.0" layoutY="484.0" mnemonicParsing="false" onAction="#analyze" prefHeight="29.0" prefWidth="95.0" stylesheets="@style.css" text="Analyze Image" />
+                  <Button layoutX="452.0" layoutY="527.0" mnemonicParsing="false" onAction="#drawCircle" prefHeight="29.0" prefWidth="87.0" stylesheets="@style.css" text="Draw Circles" />
                </children>
                 </Pane>
-                <Pane fx:id="pnlSearch" prefHeight="200.0" prefWidth="200.0" visible="false" />
+                <Pane fx:id="pnlSearch" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cbd0d1" height="321.0" layoutX="52.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="309.0" />
+                  <ImageView fx:id="circledImage" fitHeight="321.0" fitWidth="309.0" layoutX="52.0" layoutY="60.0" pickOnBounds="true" />
+               </children></Pane>
             </children>
         </StackPane>
     </children>
