@@ -46,12 +46,13 @@ public class ImageAdjustments {
         HashMap<Integer, Integer> sizeMap = createSizeMap();
 
 
-        drawCircles(spotMap, writableImage , 20,Color.BLUE);
+        drawCircles(spotMap, writableImage , Color.BLUE);
 //        System.out.println(spotMap);
-        System.out.println("Value Set Map:");
-        System.out.println(valueMap);
+        //System.out.println("Value Set Map:");
+//        System.out.println(valueMap);
+        System.out.println(sizeMap);
 
-        printUnionArray(width);
+        //printUnionArray(width);
         imageView.setImage(writableImage);
     }
 
@@ -125,13 +126,41 @@ public class ImageAdjustments {
     }
 
 
-    public void drawCircles(HashMap<Integer, List<Integer>> spotMap, WritableImage imageStandard, int circleRadius, Color circleColor) {
+    public void drawCircles(HashMap<Integer, List<Integer>> spotMap, WritableImage imageStandard, Color circleColor) {
         PixelWriter imageWriter = imageStandard.getPixelWriter();
+
+        HashMap<Integer, Integer> sizeMap = createSizeMap();
 
         //iterate through the spotMap
         for (int root : spotMap.keySet()) {
+            //TODO: make a varying radius depending on the size of the spot
+            int circleRadius;
+            if (sizeMap.get(root) < 10)
+                circleRadius = 3;
+            else if (sizeMap.get(root) < 20)
+                circleRadius = 6;
+            else if (sizeMap.get(root) < 30)
+                circleRadius = 8;
+            else if (sizeMap.get(root) < 40)
+                circleRadius = 10;
+            else if (sizeMap.get(root) < 50)
+                circleRadius = 13;
+            else if (sizeMap.get(root) < 60)
+                circleRadius = 16;
+            else if (sizeMap.get(root) < 70)
+                circleRadius = 19;
+            else if (sizeMap.get(root) < 80)
+                circleRadius = 22;
+            else if (sizeMap.get(root) < 90)
+                circleRadius = 25;
+            else if (sizeMap.get(root) < 100)
+                circleRadius = 28;
+            else
+                circleRadius = 30;
+
             //get the list of pixels for each spot
             List<Integer> spots = spotMap.get(root);
+
             //Get the center of the spot by finding the average of the x and y coordinates
             int xSum = 0;
             int ySum = 0;
@@ -148,12 +177,11 @@ public class ImageAdjustments {
             //draw empty circle around the center of the spot with specified radius and color
             for (int x = xCenter - circleRadius; x <= xCenter + circleRadius; x++) {
                 for (int y = yCenter - circleRadius; y < yCenter + circleRadius; y++) {
-                    if(x >= 0 && x < imageStandard.getWidth() && y >= 0 && y < imageStandard.getHeight()){
+                    if (x >= 0 && x < imageStandard.getWidth() && y >= 0 && y < imageStandard.getHeight()) {
                         double distance = Math.sqrt((x - xCenter) * (x - xCenter) + (y - yCenter) * (y - yCenter));
                         if (distance >= circleRadius - 1 && distance <= circleRadius) {
                             imageWriter.setColor(x, y, circleColor);
-                        }
-                        else if(distance < circleRadius - 1 && distance >= circleRadius - 2){
+                        } else if (distance < circleRadius - 1 && distance >= circleRadius - 2) {
                             Color translucentColor = circleColor.deriveColor(0, 1, 1, 0.0);
                             imageWriter.setColor(x, y, translucentColor);
                         }

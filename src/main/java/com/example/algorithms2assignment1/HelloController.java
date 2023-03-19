@@ -114,18 +114,14 @@ public class HelloController {
 
 
     public void analyze(ActionEvent actionEvent) {
-        ImageAdjustments adjustments = new ImageAdjustments();
-        adjustments.segmentImage(defaultImage,editedImage,threshholdChange.getValue()/50);
+//        WritableImage image = new WritableImage(defaultImage.getPixelReader(), (int)defaultImage.getWidth(), (int)defaultImage.getHeight());
+//        editedImage.setImage(image);
 
-        //TODO: analyze imageArray to find the number of objects in the image
-//        for(int i = 0; i < width; i++){
-//            for(int j = 0; j < height; j++){
-//                if(imageArray[i][j] == 1){
-//
-//                }
-//            }
-//        }
+        ImageAdjustments adjustments = new ImageAdjustments();
+        adjustments.segmentImage(defaultImage, editedImage, threshholdChange.getValue() / 50);
+
     }
+
 
 
     @FXML
