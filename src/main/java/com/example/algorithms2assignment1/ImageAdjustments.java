@@ -68,6 +68,61 @@ public class ImageAdjustments {
 
 
 
+    public void segmentImage(Image imageStandard, WritableImage writableImage, ImageView imageView, double threshold) {
+        // Get the height and width of the image
+        int height = (int) imageStandard.getHeight();
+        int width = (int) imageStandard.getWidth();
+
+        PixelReader imageReader = imageStandard.getPixelReader();
+        PixelWriter imageWriter = writableImage.getPixelWriter();
+
+        imagePixels = new int[ width * height];
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Color color = imageReader.getColor(x, y);
+                if (color.getBrightness() > threshold) {
+                    imageWriter.setColor(x, y, Color.WHITE);
+                } else {
+                    imageWriter.setColor(x, y, Color.BLACK);
+                }
+            }
+        }
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Color color = imageReader.getColor(x, y);
+
+                double grayscale = color.getRed() * 0.299 + color.getGreen() * 0.587 + color.getBlue() * 0.114;
+                Color whiteBlack = grayscale > threshold ? Color.WHITE : Color.BLACK;
+
+
+                if (whiteBlack == Color.BLACK) {
+                    imagePixels[y * width + x] = -1;
+                } else {
+                    imagePixels[y * width + x] = y* width + x;
+                }
+            }
+        }
+
+        mergeUnionArray(width);
+        HashMap<Integer, List<Integer>> spotMap = createLabelMap(width).get("spotMap");
+        HashMap<Integer, List<Integer>> valueMap = createLabelMap(width).get("valueMap");
+        HashMap<Integer, Integer> sizeMap = createSizeMap();
+
+
+        drawCircles(spotMap, writableImage , Color.BLUE);
+//        System.out.println(spotMap);
+        //System.out.println("Value Set Map:");
+//        System.out.println(valueMap);
+        System.out.println(sizeMap);
+
+        //printUnionArray(width);
+        imageView.setImage(writableImage);
+    }
+
+
+
     public void mergeUnionArray( int width) {
         for (int i = 0; i < imagePixels.length; i++) {
             if ( imagePixels[i] != -1) {

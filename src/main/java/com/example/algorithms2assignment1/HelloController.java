@@ -99,12 +99,8 @@ public class HelloController {
 
 
     public void analyze(ActionEvent actionEvent) {
-//        WritableImage image = new WritableImage(defaultImage.getPixelReader(), (int)defaultImage.getWidth(), (int)defaultImage.getHeight());
-//        editedImage.setImage(image);
-
         ImageAdjustments adjustments = new ImageAdjustments();
-        //adjustments.segmentImage(defaultImage, editedImage, threshholdChange.getValue() / 50);
-
+        adjustments.drawCircles();
     }
 
 
