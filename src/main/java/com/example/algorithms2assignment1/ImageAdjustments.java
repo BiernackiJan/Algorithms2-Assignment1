@@ -13,16 +13,26 @@ public class ImageAdjustments {
 
 
     int imagePixels[];
-    public void segmentImage(Image imageStandard, ImageView imageView, double threshold) {
+    public void segmentImage(Image imageStandard, WritableImage writableImage, ImageView imageView, double threshold) {
         // Get the height and width of the image
         int height = (int) imageStandard.getHeight();
         int width = (int) imageStandard.getWidth();
 
         PixelReader imageReader = imageStandard.getPixelReader();
-
-        WritableImage writableImage = new WritableImage(width, height);
+        PixelWriter imageWriter = writableImage.getPixelWriter();
 
         imagePixels = new int[ width * height];
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Color color = imageReader.getColor(x, y);
+                if (color.getBrightness() > threshold) {
+                    imageWriter.setColor(x, y, Color.WHITE);
+                } else {
+                    imageWriter.setColor(x, y, Color.BLACK);
+                }
+            }
+        }
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {

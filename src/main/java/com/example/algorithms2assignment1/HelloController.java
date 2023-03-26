@@ -89,23 +89,8 @@ public class HelloController {
     private Slider threshholdChange;
 
     public void imageAdjust(){
-        int height = (int) defaultImage.getHeight();
-        int width = (int) defaultImage.getWidth();
-        PixelReader pixelReader = defaultImage.getPixelReader();
-        PixelWriter pixelWriter = writableImage1.getPixelWriter();
-        double threshold = threshholdChange.getValue()/50; // Adjust this threshold as needed
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Color color = pixelReader.getColor(x, y);
-                if (color.getBrightness() > threshold) {
-                    pixelWriter.setColor(x, y, Color.WHITE);
-                } else {
-                    pixelWriter.setColor(x, y, Color.BLACK);
-                }
-            }
-        }
-
+        ImageAdjustments adjustments = new ImageAdjustments();
+        adjustments.segmentImage(defaultImage,writableImage1, editedImage, threshholdChange.getValue() / 50);
     }
 
     public void adjust(ActionEvent actionEvent) {
@@ -118,7 +103,7 @@ public class HelloController {
 //        editedImage.setImage(image);
 
         ImageAdjustments adjustments = new ImageAdjustments();
-        adjustments.segmentImage(defaultImage, editedImage, threshholdChange.getValue() / 50);
+        //adjustments.segmentImage(defaultImage, editedImage, threshholdChange.getValue() / 50);
 
     }
 
