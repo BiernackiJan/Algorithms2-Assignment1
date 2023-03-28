@@ -60,16 +60,16 @@ public class HelloController {
         fileChooser.setTitle("Open Resource File");
         //File file = fileChooser.showOpenDialog(null);
         //laptop
-//        File file = new File("C:\\Users\\janbi\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
+        File file = new File("C:\\Users\\janbi\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
         //PC
-        File file = new File("C:\\Users\\Jan\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
+        //File file = new File("C:\\Users\\Jan\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
 
         Image image1 = new Image(String.valueOf(file));
         image.setImage(image1);
 
         int height=(int)image1.getHeight();
         int width=(int)image1.getWidth();
-        PixelReader pixelReader=image1.getPixelReader();
+        PixelReader pixelReader = image1.getPixelReader();
         WritableImage writableImage = new WritableImage(width,height);
         PixelWriter pixelWriter = writableImage.getPixelWriter();
 
@@ -81,16 +81,33 @@ public class HelloController {
         }
 
         defaultImage = image1;
+        writableImage2 = writableImage;
         writableImage1 = writableImage;
         editedImage.setImage(writableImage1);
     }
 
     @FXML
     private Slider threshholdChange;
+    WritableImage writableImage2;
 
     public void imageAdjust(){
+        PixelReader pixelReader = defaultImage.getPixelReader();
+        PixelWriter pixelWriter = writableImage2.getPixelWriter();
+
+        int height = (int) defaultImage.getHeight();
+        int width = (int) defaultImage.getWidth();
+
+        for(int y = 0; y < height; y++){
+            for(int x = 0; x < width; x++){
+                Color color = pixelReader.getColor(x, y);
+                pixelWriter.setColor(x, y, color);
+            }
+        }
+
+
         ImageAdjustments adjustments = new ImageAdjustments();
-        adjustments.segmentImage(defaultImage,writableImage1, editedImage, threshholdChange.getValue() / 50);
+        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, threshholdChange.getValue() / 50);
+        circledImage.setImage(writableImage2);
     }
 
     public void adjust(ActionEvent actionEvent) {
@@ -100,7 +117,7 @@ public class HelloController {
 
     public void analyze(ActionEvent actionEvent) {
         ImageAdjustments adjustments = new ImageAdjustments();
-        adjustments.drawCircles();
+        //adjustments.drawCircles();
     }
 
 

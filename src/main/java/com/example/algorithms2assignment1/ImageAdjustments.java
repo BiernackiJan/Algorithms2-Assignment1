@@ -13,7 +13,7 @@ public class ImageAdjustments {
 
 
     int imagePixels[];
-    public void segmentImage(Image imageStandard, WritableImage writableImage, ImageView imageView, double threshold) {
+    public void segmentImage(Image imageStandard, WritableImage writableImage, WritableImage writableImage2, ImageView imageView, double threshold) {
         // Get the height and width of the image
         int height = (int) imageStandard.getHeight();
         int width = (int) imageStandard.getWidth();
@@ -56,7 +56,7 @@ public class ImageAdjustments {
         HashMap<Integer, Integer> sizeMap = createSizeMap();
 
 
-        drawCircles(spotMap, writableImage , Color.BLUE);
+        drawCircles(spotMap, writableImage, writableImage2 , Color.BLUE);
 //        System.out.println(spotMap);
         //System.out.println("Value Set Map:");
 //        System.out.println(valueMap);
@@ -64,62 +64,11 @@ public class ImageAdjustments {
 
         //printUnionArray(width);
         imageView.setImage(writableImage);
+
     }
 
 
 
-    public void segmentImage(Image imageStandard, WritableImage writableImage, ImageView imageView, double threshold) {
-        // Get the height and width of the image
-        int height = (int) imageStandard.getHeight();
-        int width = (int) imageStandard.getWidth();
-
-        PixelReader imageReader = imageStandard.getPixelReader();
-        PixelWriter imageWriter = writableImage.getPixelWriter();
-
-        imagePixels = new int[ width * height];
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Color color = imageReader.getColor(x, y);
-                if (color.getBrightness() > threshold) {
-                    imageWriter.setColor(x, y, Color.WHITE);
-                } else {
-                    imageWriter.setColor(x, y, Color.BLACK);
-                }
-            }
-        }
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Color color = imageReader.getColor(x, y);
-
-                double grayscale = color.getRed() * 0.299 + color.getGreen() * 0.587 + color.getBlue() * 0.114;
-                Color whiteBlack = grayscale > threshold ? Color.WHITE : Color.BLACK;
-
-
-                if (whiteBlack == Color.BLACK) {
-                    imagePixels[y * width + x] = -1;
-                } else {
-                    imagePixels[y * width + x] = y* width + x;
-                }
-            }
-        }
-
-        mergeUnionArray(width);
-        HashMap<Integer, List<Integer>> spotMap = createLabelMap(width).get("spotMap");
-        HashMap<Integer, List<Integer>> valueMap = createLabelMap(width).get("valueMap");
-        HashMap<Integer, Integer> sizeMap = createSizeMap();
-
-
-        drawCircles(spotMap, writableImage , Color.BLUE);
-//        System.out.println(spotMap);
-        //System.out.println("Value Set Map:");
-//        System.out.println(valueMap);
-        System.out.println(sizeMap);
-
-        //printUnionArray(width);
-        imageView.setImage(writableImage);
-    }
 
 
 
@@ -191,8 +140,9 @@ public class ImageAdjustments {
     }
 
 
-    public void drawCircles(HashMap<Integer, List<Integer>> spotMap, WritableImage imageStandard, Color circleColor) {
+    public void drawCircles(HashMap<Integer, List<Integer>> spotMap, WritableImage imageStandard, WritableImage image2, Color circleColor) {
         PixelWriter imageWriter = imageStandard.getPixelWriter();
+        PixelWriter image2Writer = image2.getPixelWriter();
 
         HashMap<Integer, Integer> sizeMap = createSizeMap();
 
@@ -246,6 +196,8 @@ public class ImageAdjustments {
                         double distance = Math.sqrt((x - xCenter) * (x - xCenter) + (y - yCenter) * (y - yCenter));
                         if (distance >= circleRadius - 1 && distance <= circleRadius) {
                             imageWriter.setColor(x, y, circleColor);
+                            image2Writer.setColor(x, y, circleColor);
+
                         } else if (distance < circleRadius - 1 && distance >= circleRadius - 2) {
                             Color translucentColor = circleColor.deriveColor(0, 1, 1, 0.0);
                             imageWriter.setColor(x, y, translucentColor);
