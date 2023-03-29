@@ -3,10 +3,7 @@ package com.example.algorithms2assignment1;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -60,9 +57,9 @@ public class HelloController {
         fileChooser.setTitle("Open Resource File");
         //File file = fileChooser.showOpenDialog(null);
         //laptop
-        File file = new File("C:\\Users\\janbi\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
+//        File file = new File("C:\\Users\\janbi\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
         //PC
-        //File file = new File("C:\\Users\\Jan\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
+        File file = new File("C:\\Users\\Jan\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
 
         Image image1 = new Image(String.valueOf(file));
         image.setImage(image1);
@@ -81,21 +78,25 @@ public class HelloController {
         }
 
         defaultImage = image1;
-        writableImage2 = writableImage;
         writableImage1 = writableImage;
         editedImage.setImage(writableImage1);
     }
 
     @FXML
     private Slider threshholdChange;
-    WritableImage writableImage2;
+    @FXML
+    private TextField numStars;
+
 
     public void imageAdjust(){
+        int height = (int) defaultImage.getHeight();
+        int width = (int) defaultImage.getWidth();
+
+        WritableImage writableImage2 = new WritableImage(width, height);
+
         PixelReader pixelReader = defaultImage.getPixelReader();
         PixelWriter pixelWriter = writableImage2.getPixelWriter();
 
-        int height = (int) defaultImage.getHeight();
-        int width = (int) defaultImage.getWidth();
 
         for(int y = 0; y < height; y++){
             for(int x = 0; x < width; x++){
@@ -106,32 +107,17 @@ public class HelloController {
 
 
         ImageAdjustments adjustments = new ImageAdjustments();
-        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, threshholdChange.getValue() / 50);
-        circledImage.setImage(writableImage2);
+        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50);
+
+        numStars.setText(String.valueOf(adjustments.numberOfCircles));
     }
 
     public void adjust(ActionEvent actionEvent) {
         imageAdjust();
     }
 
-
-    public void analyze(ActionEvent actionEvent) {
-        ImageAdjustments adjustments = new ImageAdjustments();
-        //adjustments.drawCircles();
-    }
-
-
-
     @FXML
     ImageView circledImage;
-    public void drawCircle(ActionEvent actionEvent){
-//        WritableImage circleImage = new WritableImage(writableImage1.getPixelReader(), (int)writableImage1.getWidth(), (int)writableImage1.getHeight());
-//        circledImage.setImage(circleImage);
-//
-//        ImageAdjustments adjustments = new ImageAdjustments();
-//        adjustments.segmentImage(writableImage1,threshholdChange.getValue()/50);
-//        adjustments.drawCircleAroundSpots(writableImage1);
-    }
 
     @FXML
     private ComboBox<String> imageOption;
@@ -276,11 +262,10 @@ public class HelloController {
 
 
 
-
-
     public void reset(){
         int height = (int) defaultImage.getHeight();
         int width = (int) defaultImage.getWidth();
+        numStars.clear();
         PixelReader pixelReader = defaultImage.getPixelReader();
         PixelWriter pixelWriter = writableImage1.getPixelWriter();
 

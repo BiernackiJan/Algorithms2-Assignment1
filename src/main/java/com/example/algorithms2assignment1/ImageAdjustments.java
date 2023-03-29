@@ -11,9 +11,9 @@ import java.util.List;
 
 public class ImageAdjustments {
 
-
+    int numberOfCircles = 0;
     int imagePixels[];
-    public void segmentImage(Image imageStandard, WritableImage writableImage, WritableImage writableImage2, ImageView imageView, double threshold) {
+    public void segmentImage(Image imageStandard, WritableImage writableImage, WritableImage writableImage2, ImageView imageView, ImageView imageView2, double threshold) {
         // Get the height and width of the image
         int height = (int) imageStandard.getHeight();
         int width = (int) imageStandard.getWidth();
@@ -58,13 +58,14 @@ public class ImageAdjustments {
 
         drawCircles(spotMap, writableImage, writableImage2 , Color.BLUE);
 //        System.out.println(spotMap);
-        //System.out.println("Value Set Map:");
+//        System.out.println("Value Set Map:");
 //        System.out.println(valueMap);
-        System.out.println(sizeMap);
+//        System.out.println(sizeMap);
+        numberOfCircles = sizeMap.size();
 
         //printUnionArray(width);
         imageView.setImage(writableImage);
-
+        imageView2.setImage(writableImage2);
     }
 
 
@@ -177,8 +178,8 @@ public class ImageAdjustments {
             List<Integer> spots = spotMap.get(root);
 
             //Get the center of the spot by finding the average of the x and y coordinates
-            int xSum = 0;
-            int ySum = 0;
+            int xSum = 15;
+            int ySum = 15;
             for (int spot : spots) {
                 double x = spot % imageStandard.getWidth();
                 double y = spot / imageStandard.getWidth();
