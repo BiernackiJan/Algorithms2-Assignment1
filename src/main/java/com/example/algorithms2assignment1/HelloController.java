@@ -48,6 +48,7 @@ public class HelloController {
 
     private Image defaultImage;
     private WritableImage writableImage1;
+
     @FXML
     ImageView image;
     @FXML
@@ -81,6 +82,8 @@ public class HelloController {
         writableImage1 = writableImage;
         editedImage.setImage(writableImage1);
     }
+
+
 
     @FXML
     private Slider threshholdChange;
@@ -116,6 +119,8 @@ public class HelloController {
         imageAdjust();
     }
 
+
+
     @FXML
     ImageView circledImage;
 
@@ -128,6 +133,8 @@ public class HelloController {
         }
     }
 
+    @FXML
+    private TreeView<String> treeView;
 
 
 

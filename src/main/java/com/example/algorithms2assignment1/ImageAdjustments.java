@@ -1,6 +1,7 @@
 package com.example.algorithms2assignment1;
 
 
+import javafx.scene.control.TreeView;
 import javafx.scene.image.*;
 import javafx.scene.paint.Color;
 import resources.UnionAlgo;
@@ -140,6 +141,10 @@ public class ImageAdjustments {
         }
     }
 
+    //TODO: Create a method that will add in a TreeView the percentage of red, green and blue in each spot
+    public void treeViewPopulation(TreeView<String> treeView, HashMap<Integer, List<Integer>> spotMap, HashMap<Integer, Integer> sizeMap ){
+
+    }
 
     public void drawCircles(HashMap<Integer, List<Integer>> spotMap, WritableImage imageStandard, WritableImage image2, Color circleColor) {
         PixelWriter imageWriter = imageStandard.getPixelWriter();
