@@ -57,9 +57,9 @@ public class HelloController {
         fileChooser.setTitle("Open Resource File");
         //File file = fileChooser.showOpenDialog(null);
         //laptop
-//        File file = new File("C:\\Users\\janbi\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
+        File file = new File("C:\\Users\\janbi\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
         //PC
-        File file = new File("C:\\Users\\Jan\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
+//        File file = new File("C:\\Users\\Jan\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
 
         Image image1 = new Image(String.valueOf(file));
         image.setImage(image1);
@@ -128,6 +128,10 @@ public class HelloController {
         }
     }
 
+
+    @FXML
+    private TreeView<String> objectList;
+    //TODO: Make a treeView that will have each object in the image as a node with listing of the precantage of red, green and blue in each object
 
 
 

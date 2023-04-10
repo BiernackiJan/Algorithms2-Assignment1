@@ -1,6 +1,8 @@
 package com.example.algorithms2assignment1;
 
 
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.*;
 import javafx.scene.paint.Color;
 import resources.UnionAlgo;
@@ -59,7 +61,7 @@ public class ImageAdjustments {
         drawCircles(spotMap, writableImage, writableImage2 , Color.BLUE);
 //        System.out.println(spotMap);
 //        System.out.println("Value Set Map:");
-//        System.out.println(valueMap);
+        System.out.println(valueMap);
 //        System.out.println(sizeMap);
         numberOfCircles = sizeMap.size();
 
@@ -71,7 +73,12 @@ public class ImageAdjustments {
 
 
 
-
+    //TODO: Create a method that will list all the objects in a TreeView
+    public void addToTreeView(TreeView treeView, HashMap<Integer, List<Integer>> spotMap) {
+        for (int i = 0; i < spotMap.size(); i++) {
+            treeView.getRoot().getChildren().add(new TreeView((TreeItem) spotMap.get(i)));
+        }
+    }
 
     public void mergeUnionArray( int width) {
         for (int i = 0; i < imagePixels.length; i++) {
@@ -149,7 +156,6 @@ public class ImageAdjustments {
 
         //iterate through the spotMap
         for (int root : spotMap.keySet()) {
-            //TODO: make a varying radius depending on the size of the spot
             int circleRadius;
             if (sizeMap.get(root) < 10)
                 circleRadius = 3;
