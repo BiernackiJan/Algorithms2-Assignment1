@@ -61,7 +61,7 @@ public class ImageAdjustments {
         drawCircles(spotMap, writableImage, writableImage2 , Color.BLUE);
 //        System.out.println(spotMap);
 //        System.out.println("Value Set Map:");
-        System.out.println(valueMap);
+//        System.out.println(valueMap);
 //        System.out.println(sizeMap);
         numberOfCircles = sizeMap.size();
 
@@ -156,6 +156,7 @@ public class ImageAdjustments {
 
         //iterate through the spotMap
         for (int root : spotMap.keySet()) {
+            //TODO: make a varying radius depending on the size of the spot
             int circleRadius;
             if (sizeMap.get(root) < 10)
                 circleRadius = 3;

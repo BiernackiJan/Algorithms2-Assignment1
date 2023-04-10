@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -75,7 +74,7 @@
         </VBox>
         <StackPane layoutX="258.0" prefHeight="576.0" prefWidth="793.0" style="-fx-background-color: #02030A;">
             <children>
-                <Pane fx:id="pnlOverview" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" visible="false">
+                <Pane fx:id="pnlOverview" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
                <children>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cbd0d1" height="321.0" layoutX="60.0" layoutY="122.0" stroke="BLACK" strokeType="INSIDE" width="309.0" />
                   <ImageView fx:id="image" fitHeight="321.0" fitWidth="309.0" layoutX="60.0" layoutY="122.0" pickOnBounds="true" />
@@ -93,7 +92,7 @@
                   </Label>
                </children>
                 </Pane>
-                <Pane fx:id="pnlSearch" prefHeight="200.0" prefWidth="200.0">
+                <Pane fx:id="pnlSearch" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cbd0d1" height="321.0" layoutX="52.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="309.0" />
                   <ImageView fx:id="circledImage" fitHeight="321.0" fitWidth="309.0" layoutX="52.0" layoutY="60.0" pickOnBounds="true" />
