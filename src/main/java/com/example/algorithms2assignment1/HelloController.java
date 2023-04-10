@@ -58,9 +58,9 @@ public class HelloController {
         fileChooser.setTitle("Open Resource File");
         //File file = fileChooser.showOpenDialog(null);
         //laptop
-        File file = new File("C:\\Users\\janbi\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
+//        File file = new File("C:\\Users\\janbi\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
         //PC
-//        File file = new File("C:\\Users\\Jan\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
+        File file = new File("C:\\Users\\Jan\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
 
         Image image1 = new Image(String.valueOf(file));
         image.setImage(image1);
@@ -110,7 +110,7 @@ public class HelloController {
 
 
         ImageAdjustments adjustments = new ImageAdjustments();
-        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50);
+        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50,objectList);
 
         numStars.setText(String.valueOf(adjustments.numberOfCircles));
     }
@@ -132,9 +132,6 @@ public class HelloController {
             fileChooser();
         }
     }
-
-    @FXML
-    private TreeView<String> treeView;
 
     @FXML
     private TreeView<String> objectList;

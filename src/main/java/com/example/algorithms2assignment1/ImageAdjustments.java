@@ -15,7 +15,7 @@ public class ImageAdjustments {
 
     int numberOfCircles = 0;
     int imagePixels[];
-    public void segmentImage(Image imageStandard, WritableImage writableImage, WritableImage writableImage2, ImageView imageView, ImageView imageView2, double threshold) {
+    public void segmentImage(Image imageStandard, WritableImage writableImage, WritableImage writableImage2, ImageView imageView, ImageView imageView2, double threshold, TreeView treeView) {
         // Get the height and width of the image
         int height = (int) imageStandard.getHeight();
         int width = (int) imageStandard.getWidth();
@@ -59,6 +59,7 @@ public class ImageAdjustments {
 
 
         drawCircles(spotMap, writableImage, writableImage2 , Color.BLUE);
+        addToTreeView(treeView, spotMap, imageStandard);
 //        System.out.println(spotMap);
 //        System.out.println("Value Set Map:");
 //        System.out.println(valueMap);
@@ -74,9 +75,43 @@ public class ImageAdjustments {
 
 
     //TODO: Create a method that will list all the objects in a TreeView
-    public void addToTreeView(TreeView treeView, HashMap<Integer, List<Integer>> spotMap) {
-        for (int i = 0; i < spotMap.size(); i++) {
-            treeView.getRoot().getChildren().add(new TreeView((TreeItem) spotMap.get(i)));
+    public void addToTreeView(TreeView treeView, HashMap<Integer, List<Integer>> spotMap, Image image) {
+//        for (int i = 0; i < spotMap.size(); i++) {
+//        }
+//        HashMap<Integer, Integer> sizeMap = createSizeMap();
+        PixelReader imageReader = image.getPixelReader();
+
+        TreeItem<String> rootItem = new TreeItem<>("Objects ");
+        treeView.setRoot(rootItem);
+
+        for (int item : spotMap.keySet()) {
+            List<Integer> spots = spotMap.get(item);
+            TreeItem itemItem = new TreeItem<>(item);
+            rootItem.getChildren().add(itemItem);
+            itemItem.getChildren().add(new TreeItem<>("Num Pixels: " + spots.size()));
+            float red = 0;
+            float green = 0;
+            float blue = 0;
+            for (int spot : spots) {
+                Color color = imageReader.getColor(spot % (int)image.getWidth(), spot / (int)image.getWidth());
+                red += color.getRed();
+                green += color.getGreen();
+                blue += color.getBlue();
+            }
+            red /= spots.size();
+            green /= spots.size();
+            blue /= spots.size();
+
+            itemItem.getChildren().add(new TreeItem<>("Estimated Sulphur: " + red));
+            itemItem.getChildren().add(new TreeItem<>("Estimated Hydrogen: " + green));
+            itemItem.getChildren().add(new TreeItem<>("Estimated Oxygen: " + blue));
+
+
+//            for (int spot : spots) {
+//                TreeItem<String> spotItem = new TreeItem<>("Spot: " + spot);
+//                itemItem.getChildren().add(spotItem);
+//            }
+
         }
     }
 
