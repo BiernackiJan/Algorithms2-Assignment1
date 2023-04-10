@@ -9,13 +9,20 @@ import resources.UnionAlgo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ImageAdjustments {
 
     int numberOfCircles = 0;
     int imagePixels[];
-    public void segmentImage(Image imageStandard, WritableImage writableImage, WritableImage writableImage2, ImageView imageView, ImageView imageView2, double threshold, TreeView treeView) {
+
+    ArrayList<Integer> sizeList = new ArrayList<>();
+
+    ArrayList<Integer> positions = new ArrayList<>();
+
+
+    public void segmentImage(Image imageStandard, WritableImage writableImage, WritableImage writableImage2, ImageView imageView, ImageView imageView2, double threshold, int minPix, TreeView treeView) {
         // Get the height and width of the image
         int height = (int) imageStandard.getHeight();
         int width = (int) imageStandard.getWidth();
@@ -23,7 +30,7 @@ public class ImageAdjustments {
         PixelReader imageReader = imageStandard.getPixelReader();
         PixelWriter imageWriter = writableImage.getPixelWriter();
 
-        imagePixels = new int[ width * height];
+        imagePixels = new int[width * height];
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -47,7 +54,7 @@ public class ImageAdjustments {
                 if (whiteBlack == Color.BLACK) {
                     imagePixels[y * width + x] = -1;
                 } else {
-                    imagePixels[y * width + x] = y* width + x;
+                    imagePixels[y * width + x] = y * width + x;
                 }
             }
         }
@@ -57,63 +64,94 @@ public class ImageAdjustments {
         HashMap<Integer, List<Integer>> valueMap = createLabelMap(width).get("valueMap");
         HashMap<Integer, Integer> sizeMap = createSizeMap();
 
+        //draw circles on both black and white image and colored image on next plane view
+        drawCircles(spotMap, writableImage, writableImage2, Color.BLUE, minPix);
 
-        drawCircles(spotMap, writableImage, writableImage2 , Color.BLUE);
-        addToTreeView(treeView, spotMap, imageStandard);
-//        System.out.println(spotMap);
-//        System.out.println("Value Set Map:");
-//        System.out.println(valueMap);
-//        System.out.println(sizeMap);
-        numberOfCircles = sizeMap.size();
+        //add objects to tree view
+        addToTreeView(treeView, spotMap, imageStandard, minPix);
 
-        //printUnionArray(width);
+
         imageView.setImage(writableImage);
         imageView2.setImage(writableImage2);
     }
 
 
-
-
-    //TODO: Create a method that will list all the objects in a TreeView
-    public void addToTreeView(TreeView treeView, HashMap<Integer, List<Integer>> spotMap, Image image) {
-//        for (int i = 0; i < spotMap.size(); i++) {
-//        }
-//        HashMap<Integer, Integer> sizeMap = createSizeMap();
+    public void addToTreeView(TreeView treeView, HashMap<Integer, List<Integer>> spotMap, Image image, int minPix) {
         PixelReader imageReader = image.getPixelReader();
+
+        LinkedList list = new LinkedList<>();
+
 
         TreeItem<String> rootItem = new TreeItem<>("Objects ");
         treeView.setRoot(rootItem);
 
+        int itemNum = 1;
+
         for (int item : spotMap.keySet()) {
             List<Integer> spots = spotMap.get(item);
-            TreeItem itemItem = new TreeItem<>(item);
-            rootItem.getChildren().add(itemItem);
-            itemItem.getChildren().add(new TreeItem<>("Num Pixels: " + spots.size()));
-            float red = 0;
-            float green = 0;
-            float blue = 0;
-            for (int spot : spots) {
-                Color color = imageReader.getColor(spot % (int)image.getWidth(), spot / (int)image.getWidth());
-                red += color.getRed();
-                green += color.getGreen();
-                blue += color.getBlue();
+
+
+            if (spots.size() >= minPix) {
+                int size = spots.size();
+                sizeList.add(size);
+
+
+                TreeItem itemItem = new TreeItem<>(itemNum);
+                itemItem.getChildren().add(new TreeItem<>("Num Pixels: " + spots.size()));
+                float red = 0;
+                float green = 0;
+                float blue = 0;
+                for (int spot : spots) {
+                    Color color = imageReader.getColor(spot % (int) image.getWidth(), spot / (int) image.getWidth());
+                    red += color.getRed();
+                    green += color.getGreen();
+                    blue += color.getBlue();
+                }
+                red /= spots.size();
+                green /= spots.size();
+                blue /= spots.size();
+
+                itemItem.getChildren().add(new TreeItem<>("Estimated Sulphur: " + red));
+                itemItem.getChildren().add(new TreeItem<>("Estimated Hydrogen: " + green));
+                itemItem.getChildren().add(new TreeItem<>("Estimated Oxygen: " + blue));
+
+                list.add(itemItem);
             }
-            red /= spots.size();
-            green /= spots.size();
-            blue /= spots.size();
-
-            itemItem.getChildren().add(new TreeItem<>("Estimated Sulphur: " + red));
-            itemItem.getChildren().add(new TreeItem<>("Estimated Hydrogen: " + green));
-            itemItem.getChildren().add(new TreeItem<>("Estimated Oxygen: " + blue));
-
-
-//            for (int spot : spots) {
-//                TreeItem<String> spotItem = new TreeItem<>("Spot: " + spot);
-//                itemItem.getChildren().add(spotItem);
-//            }
-
         }
+
+
+
+        for (int i = 0; i < sizeList.size(); i++) {
+            positions.add(i);
+        }
+
+        // Sort the ArrayList from largest to smallest
+        for (int i = 0; i < sizeList.size() - 1; i++) {
+            for (int j = 0; j < sizeList.size() - i - 1; j++) {
+                if (sizeList.get(j) < sizeList.get(j + 1)) {
+
+                    // Swap the elements in the sizeList
+                    int temp = sizeList.get(j);
+                    sizeList.set(j, sizeList.get(j + 1));
+                    sizeList.set(j + 1, temp);
+
+                    // Swap the elements in the positions list
+                    temp = positions.get(j);
+                    positions.set(j, positions.get(j + 1));
+                    positions.set(j + 1, temp);
+                }
+            }
+        }
+
+        for (int i = 0; i < positions.size(); i++) {
+            rootItem.getChildren().add((TreeItem) list.get(positions.get(i)));
+            rootItem.getChildren().get(i).setValue(String.valueOf(i+1));
+        }
+
     }
+
+
+
 
     public void mergeUnionArray( int width) {
         for (int i = 0; i < imagePixels.length; i++) {
@@ -126,6 +164,8 @@ public class ImageAdjustments {
             }
         }
     }
+
+
 
 
 
@@ -153,9 +193,11 @@ public class ImageAdjustments {
     }
 
 
+
+
+
     public HashMap<Integer, Integer> createSizeMap() {
         HashMap<Integer, List<Integer>> spotMap = new HashMap<>();
-        HashMap<Integer, List<Integer>> valueMap = new HashMap<>();
         HashMap<Integer, Integer> sizeMap = new HashMap<>();
 
         for (int i = 0; i < imagePixels.length; i++) {
@@ -173,6 +215,8 @@ public class ImageAdjustments {
     }
 
 
+
+
     public void printUnionArray(int width) {
         for (int i = 0; i < imagePixels.length; i++) {
             if (i % width == 0) {
@@ -183,7 +227,9 @@ public class ImageAdjustments {
     }
 
 
-    public void drawCircles(HashMap<Integer, List<Integer>> spotMap, WritableImage imageStandard, WritableImage image2, Color circleColor) {
+
+
+    public void drawCircles(HashMap<Integer, List<Integer>> spotMap, WritableImage imageStandard, WritableImage image2, Color circleColor, int minPix) {
         PixelWriter imageWriter = imageStandard.getPixelWriter();
         PixelWriter image2Writer = image2.getPixelWriter();
 
@@ -191,62 +237,66 @@ public class ImageAdjustments {
 
         //iterate through the spotMap
         for (int root : spotMap.keySet()) {
-            //TODO: make a varying radius depending on the size of the spot
-            int circleRadius;
-            if (sizeMap.get(root) < 10)
-                circleRadius = 3;
-            else if (sizeMap.get(root) < 20)
-                circleRadius = 6;
-            else if (sizeMap.get(root) < 30)
-                circleRadius = 8;
-            else if (sizeMap.get(root) < 40)
-                circleRadius = 10;
-            else if (sizeMap.get(root) < 50)
-                circleRadius = 13;
-            else if (sizeMap.get(root) < 60)
-                circleRadius = 16;
-            else if (sizeMap.get(root) < 70)
-                circleRadius = 19;
-            else if (sizeMap.get(root) < 80)
-                circleRadius = 22;
-            else if (sizeMap.get(root) < 90)
-                circleRadius = 25;
-            else if (sizeMap.get(root) < 100)
-                circleRadius = 28;
-            else
-                circleRadius = 30;
-
             //get the list of pixels for each spot
             List<Integer> spots = spotMap.get(root);
+            //if the spot is big enough
+            if (spots.size() >= minPix) {
 
-            //Get the center of the spot by finding the average of the x and y coordinates
-            int xSum = 15;
-            int ySum = 15;
-            for (int spot : spots) {
-                double x = spot % imageStandard.getWidth();
-                double y = spot / imageStandard.getWidth();
-                xSum += x;
-                ySum += y;
-            }
-            int xCenter = xSum / spots.size();
-            int yCenter = ySum / spots.size();
+                int circleRadius;
+                if (sizeMap.get(root) < 10)
+                    circleRadius = 3;
+                else if (sizeMap.get(root) < 20)
+                    circleRadius = 6;
+                else if (sizeMap.get(root) < 30)
+                    circleRadius = 8;
+                else if (sizeMap.get(root) < 40)
+                    circleRadius = 10;
+                else if (sizeMap.get(root) < 50)
+                    circleRadius = 13;
+                else if (sizeMap.get(root) < 60)
+                    circleRadius = 16;
+                else if (sizeMap.get(root) < 70)
+                    circleRadius = 19;
+                else if (sizeMap.get(root) < 80)
+                    circleRadius = 22;
+                else if (sizeMap.get(root) < 90)
+                    circleRadius = 25;
+                else if (sizeMap.get(root) < 100)
+                    circleRadius = 28;
+                else
+                    circleRadius = 30;
 
 
-            //draw empty circle around the center of the spot with specified radius and color
-            for (int x = xCenter - circleRadius; x <= xCenter + circleRadius; x++) {
-                for (int y = yCenter - circleRadius; y < yCenter + circleRadius; y++) {
-                    if (x >= 0 && x < imageStandard.getWidth() && y >= 0 && y < imageStandard.getHeight()) {
-                        double distance = Math.sqrt((x - xCenter) * (x - xCenter) + (y - yCenter) * (y - yCenter));
-                        if (distance >= circleRadius - 1 && distance <= circleRadius) {
-                            imageWriter.setColor(x, y, circleColor);
-                            image2Writer.setColor(x, y, circleColor);
+                //Get the center of the spot by finding the average of the x and y coordinates
+                int xSum = 15;
+                int ySum = 15;
+                for (int spot : spots) {
+                    double x = spot % imageStandard.getWidth();
+                    double y = spot / imageStandard.getWidth();
+                    xSum += x;
+                    ySum += y;
+                }
+                int xCenter = xSum / spots.size();
+                int yCenter = ySum / spots.size();
 
-                        } else if (distance < circleRadius - 1 && distance >= circleRadius - 2) {
-                            Color translucentColor = circleColor.deriveColor(0, 1, 1, 0.0);
-                            imageWriter.setColor(x, y, translucentColor);
+
+                //draw empty circle around the center of the spot with specified radius and color
+                for (int x = xCenter - circleRadius; x <= xCenter + circleRadius; x++) {
+                    for (int y = yCenter - circleRadius; y < yCenter + circleRadius; y++) {
+                        if (x >= 0 && x < imageStandard.getWidth() && y >= 0 && y < imageStandard.getHeight()) {
+                            double distance = Math.sqrt((x - xCenter) * (x - xCenter) + (y - yCenter) * (y - yCenter));
+                            if (distance >= circleRadius - 1 && distance <= circleRadius) {
+                                imageWriter.setColor(x, y, circleColor);
+                                image2Writer.setColor(x, y, circleColor);
+
+                            } else if (distance < circleRadius - 1 && distance >= circleRadius - 2) {
+                                Color translucentColor = circleColor.deriveColor(0, 1, 1, 0.0);
+                                imageWriter.setColor(x, y, translucentColor);
+                            }
                         }
                     }
                 }
+                numberOfCircles++;
             }
         }
     }

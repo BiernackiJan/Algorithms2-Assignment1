@@ -46,6 +46,9 @@ public class HelloController {
     }
 
 
+    //TODO: Number objects in image from largest to smallest
+    //TODO: Color the large enough objects in random colors in the black and white image
+
     private Image defaultImage;
     private WritableImage writableImage1;
 
@@ -86,6 +89,8 @@ public class HelloController {
 
 
     @FXML
+    private TextField minPixels;
+    @FXML
     private Slider threshholdChange;
     @FXML
     private TextField numStars;
@@ -110,7 +115,7 @@ public class HelloController {
 
 
         ImageAdjustments adjustments = new ImageAdjustments();
-        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50,objectList);
+        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList);
 
         numStars.setText(String.valueOf(adjustments.numberOfCircles));
     }
@@ -135,6 +140,8 @@ public class HelloController {
 
     @FXML
     private TreeView<String> objectList;
+
+
     //TODO: Make a treeView that will have each object in the image as a node with listing of the precantage of red, green and blue in each object
 
 

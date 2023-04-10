@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -16,7 +17,6 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.TreeView?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="1050.0" style="-fx-background-color: #02030A;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.algorithms2assignment1.HelloController">
     <children>
         <VBox alignment="TOP_CENTER" prefHeight="576.0" prefWidth="256.0" style="-fx-background-color: #05071F;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -47,7 +47,7 @@
                         <Insets left="50.0" />
                     </padding>
                 </Button>
-                <Button fx:id="btnSearch" alignment="BASELINE_LEFT" graphicTextGap="22.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="42.0" prefWidth="259.0" stylesheets="@style.css" text="HIstogram">
+                <Button fx:id="btnSearch" alignment="BASELINE_LEFT" graphicTextGap="22.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="42.0" prefWidth="259.0" stylesheets="@style.css" text="Analyzed Image">
                     <graphic>
                         <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                             <image>
@@ -84,13 +84,14 @@
                   <ImageView fx:id="editedImage" fitHeight="321.0" fitWidth="309.0" layoutX="422.0" layoutY="122.0" pickOnBounds="true" />
                   <Button layoutX="353.0" layoutY="527.0" mnemonicParsing="false" onAction="#reset" prefHeight="29.0" prefWidth="87.0" stylesheets="@style.css" text="Reset Image" />
                   <Slider fx:id="threshholdChange" layoutX="507.0" layoutY="456.0" max="50.0" value="1.0" />
-                  <Button layoutX="353.0" layoutY="484.0" mnemonicParsing="false" onAction="#adjust" prefHeight="29.0" prefWidth="87.0" stylesheets="@style.css" text="Adjust Image" />
+                  <Button layoutX="237.0" layoutY="478.0" mnemonicParsing="false" onAction="#adjust" prefHeight="29.0" prefWidth="87.0" stylesheets="@style.css" text="Adjust Image" />
                   <TextField fx:id="numStars" alignment="CENTER" editable="false" layoutX="577.0" layoutY="479.0" prefHeight="27.0" prefWidth="61.0" style="-fx-background-color: #02030A; -fx-border-color: #B7C3D7; -fx-border-radius: 2em;" stylesheets="@style.css" />
                   <Label layoutX="482.0" layoutY="482.0" prefHeight="20.0" prefWidth="87.0" text="Num. of Stars" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
+                  <TextField fx:id="minPixels" alignment="CENTER" layoutX="94.0" layoutY="479.0" prefHeight="27.0" prefWidth="130.0" promptText="Minimum Pixels" style="-fx-background-color: #02030A; -fx-border-color: #B7C3D7; -fx-border-radius: 2em;" stylesheets="@style.css" />
                </children>
                 </Pane>
                 <Pane fx:id="pnlSearch" prefHeight="200.0" prefWidth="200.0" visible="false">
