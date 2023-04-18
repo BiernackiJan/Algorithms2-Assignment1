@@ -7,10 +7,7 @@ import javafx.scene.image.*;
 import javafx.scene.paint.Color;
 import resources.UnionAlgo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ImageAdjustments {
 
@@ -60,12 +57,13 @@ public class ImageAdjustments {
         }
 
         mergeUnionArray(width);
-        HashMap<Integer, List<Integer>> spotMap = createLabelMap(width).get("spotMap");
-        HashMap<Integer, List<Integer>> valueMap = createLabelMap(width).get("valueMap");
+        HashMap<Integer, List<Integer>> spotMap = createLabelMap(imagePixels).get("spotMap");
+        HashMap<Integer, List<Integer>> valueMap = createLabelMap(imagePixels).get("valueMap");
         HashMap<Integer, Integer> sizeMap = createSizeMap();
 
         //draw circles on both black and white image and colored image on next plane view
         drawCircles(spotMap, writableImage, writableImage2, Color.BLUE, minPix);
+
 
         //add objects to tree view
         addToTreeView(treeView, spotMap, imageStandard, minPix);
@@ -125,6 +123,7 @@ public class ImageAdjustments {
             positions.add(i);
         }
 
+
         // Sort the ArrayList from largest to smallest
         for (int i = 0; i < sizeList.size() - 1; i++) {
             for (int j = 0; j < sizeList.size() - i - 1; j++) {
@@ -145,7 +144,8 @@ public class ImageAdjustments {
 
         for (int i = 0; i < positions.size(); i++) {
             rootItem.getChildren().add((TreeItem) list.get(positions.get(i)));
-            rootItem.getChildren().get(i).setValue(String.valueOf(i+1));
+            int j = i + 1;
+            rootItem.getChildren().get(i).setValue("Celestial Object " + j);
         }
 
     }
@@ -167,22 +167,45 @@ public class ImageAdjustments {
 
 
 
+    //Color a single random object with a random color in the image
+    public void colorRandomObject(ImageView imageView, WritableImage writableImage) {
+        int width = (int) writableImage.getWidth();
+        HashMap<Integer, List<Integer>> spotMap = createLabelMap(imagePixels).get("spotMap");
+
+        PixelWriter imageWriter = writableImage.getPixelWriter();
+        Random rand = new Random();
+        int random = rand.nextInt(spotMap.size());
+        int i = 0;
+        for (int item : spotMap.keySet()) {
+            if (i == random) {
+                List<Integer> spots = spotMap.get(item);
+                for (int spot : spots) {
+                    imageWriter.setColor(spot % width, spot / width, Color.color(Math.random(), Math.random(), Math.random()));
+                }
+            }
+            i++;
+        }
 
 
-    public HashMap<String, HashMap<Integer, List<Integer>>> createLabelMap(int width) {
+
+        imageView.setImage(writableImage);
+    }
+
+
+    public HashMap<String, HashMap<Integer, List<Integer>>> createLabelMap(int[] imagePixel) {
         HashMap<Integer, List<Integer>> spotMap = new HashMap<>();
         HashMap<Integer, List<Integer>> valueMap = new HashMap<>();
 
-        for (int i = 0; i < imagePixels.length; i++) {
-            if (imagePixels[i] != -1) {
-                int root = UnionAlgo.find(imagePixels, i);
+        for (int i = 0; i < imagePixel.length; i++) {
+            if (imagePixel[i] != -1) {
+                int root = UnionAlgo.find(imagePixel, i);
                 if (!spotMap.containsKey(root)) {
                     spotMap.put(root, new ArrayList<Integer>());
                     valueMap.put(root, new ArrayList<Integer>());
                 }
-                valueMap.get(root).add(imagePixels[i]);
-                if (!spotMap.get(root).contains(imagePixels[i])) {
-                    spotMap.get(root).add(imagePixels[i]);
+                valueMap.get(root).add(imagePixel[i]);
+                if (!spotMap.get(root).contains(imagePixel[i])) {
+                    spotMap.get(root).add(imagePixel[i]);
                 }
             }
         }
@@ -213,19 +236,6 @@ public class ImageAdjustments {
         }
         return sizeMap;
     }
-
-
-
-
-    public void printUnionArray(int width) {
-        for (int i = 0; i < imagePixels.length; i++) {
-            if (i % width == 0) {
-                System.out.println();
-            }
-            System.out.print(imagePixels[i] + " ");
-        }
-    }
-
 
 
 
@@ -290,13 +300,20 @@ public class ImageAdjustments {
                                 image2Writer.setColor(x, y, circleColor);
 
                             } else if (distance < circleRadius - 1 && distance >= circleRadius - 2) {
-                                Color translucentColor = circleColor.deriveColor(0, 1, 1, 0.0);
-                                imageWriter.setColor(x, y, translucentColor);
+                                imageWriter.setColor(x, y, Color.BLACK);
                             }
                         }
                     }
                 }
                 numberOfCircles++;
+            }
+            //color not big enough spots black
+            else {
+                for (int spot : spots) {
+                    double x = spot % imageStandard.getWidth();
+                    double y = spot / imageStandard.getWidth();
+                    image2Writer.setColor((int) x, (int) y,Color.BLACK);
+                }
             }
         }
     }

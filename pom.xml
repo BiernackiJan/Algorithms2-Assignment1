@@ -106,6 +106,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -129,7 +135,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.example.algorithms2assignment1/com.example.algorithms2assignment1.HelloApplication
+                                com.example.algorithms2assignment1/com.example.algorithms2assignment1.GalaxyAnalyzer
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

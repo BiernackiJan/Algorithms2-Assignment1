@@ -17,7 +17,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="1050.0" style="-fx-background-color: #02030A;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.algorithms2assignment1.HelloController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="1050.0" style="-fx-background-color: #02030A;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.algorithms2assignment1.AnalyzerController">
     <children>
         <VBox alignment="TOP_CENTER" prefHeight="576.0" prefWidth="256.0" style="-fx-background-color: #05071F;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -99,6 +99,7 @@
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cbd0d1" height="321.0" layoutX="52.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="309.0" />
                   <ImageView fx:id="circledImage" fitHeight="321.0" fitWidth="309.0" layoutX="52.0" layoutY="60.0" pickOnBounds="true" />
                   <TreeView fx:id="objectList" layoutX="446.0" layoutY="60.0" prefHeight="412.0" prefWidth="301.0" />
+                  <Button layoutX="172.0" layoutY="401.0" mnemonicParsing="false" onAction="#colorRand" prefHeight="29.0" prefWidth="96.0" stylesheets="@style.css" text="Color One" />
                </children></Pane>
             </children>
         </StackPane>

@@ -9,10 +9,10 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class GalaxyAnalyzer extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("galaxy-scanner.fxml"));
         stage.setScene(new Scene(root));
         stage.initStyle(StageStyle.UNDECORATED);
         stage.show();
