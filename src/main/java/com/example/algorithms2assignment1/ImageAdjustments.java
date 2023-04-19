@@ -1,18 +1,30 @@
 package com.example.algorithms2assignment1;
 
 
+import javafx.scene.Group;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import resources.UnionAlgo;
 
 import java.util.*;
+
 
 public class ImageAdjustments {
 
     int numberOfCircles = 0;
     int imagePixels[];
+
+    int descOrder[];
+
+    int xArray[];
+
+    int yArray[];
 
     ArrayList<Integer> sizeList = new ArrayList<>();
 
@@ -27,15 +39,31 @@ public class ImageAdjustments {
         PixelReader imageReader = imageStandard.getPixelReader();
         PixelWriter imageWriter = writableImage.getPixelWriter();
 
+        PixelWriter pixelWriter = writableImage2.getPixelWriter();
+
+
+        for(int y = 0; y < height; y++){
+            for(int x = 0; x < width; x++){
+                Color color = imageReader.getColor(x, y);
+                pixelWriter.setColor(x, y, color);
+            }
+        }
+
         imagePixels = new int[width * height];
+        xArray = new int[width * height];
+        yArray = new int[width * height];
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 Color color = imageReader.getColor(x, y);
                 if (color.getBrightness() > threshold) {
                     imageWriter.setColor(x, y, Color.WHITE);
+                    xArray[y * width + x] = x;
+                    yArray[y * width + x] = y;
                 } else {
                     imageWriter.setColor(x, y, Color.BLACK);
+                    xArray[y * width + x] = -1;
+                    yArray[y * width + x] = -1;
                 }
             }
         }
@@ -61,8 +89,7 @@ public class ImageAdjustments {
         HashMap<Integer, List<Integer>> valueMap = createLabelMap(imagePixels).get("valueMap");
         HashMap<Integer, Integer> sizeMap = createSizeMap();
 
-        //draw circles on both black and white image and colored image on next plane view
-        drawCircles(spotMap, writableImage, writableImage2, Color.BLUE, minPix);
+
 
 
         //add objects to tree view
@@ -71,6 +98,13 @@ public class ImageAdjustments {
 
         imageView.setImage(writableImage);
         imageView2.setImage(writableImage2);
+
+
+        //draw circles on both black and white image and colored image on next plane view
+        drawCircles(spotMap, writableImage, writableImage2,imageView, imageView2, Color.BLUE, minPix);
+
+//        numberObjects(imageView,imageView2,minPix);
+        drawNumbers(spotMap, writableImage, writableImage2, imageView, imageView2, minPix);
     }
 
 
@@ -142,14 +176,138 @@ public class ImageAdjustments {
             }
         }
 
+
+        //Put roots in the descOrder array from largest to smallest
+//        System.out.println(positions);
+//        System.out.println(sizeList);
+        int list1[];
+        list1 = new int[spotMap.size()];
+
+        descOrder = new int[spotMap.size()];
+
+        for(int i = 0; i < sizeList.size(); i++){
+            list1[i] = sizeList.get(i);
+        }
+
+
+        for(int root : spotMap.keySet()){
+            for(int i = 0; i < sizeList.size(); i++) {
+                int s = sizeList.get(i);
+                descOrder[s] = root;
+            }
+        }
+
+
+
+
         for (int i = 0; i < positions.size(); i++) {
             rootItem.getChildren().add((TreeItem) list.get(positions.get(i)));
             int j = i + 1;
             rootItem.getChildren().get(i).setValue("Celestial Object " + j);
         }
-
     }
 
+
+
+
+    //----------------------------------------------------------------------------------------
+    //                                       Helper Methods
+    //----------------------------------------------------------------------------------------
+
+
+
+    public static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+
+    public static int partitioning(int[] roots, int[] sizes, int left, int right) {
+        int turn = sizes[right];
+        int i = left - 1;
+        for (int j = left; j <= right - 1; j++) {
+            if (sizes[j] >= turn) {
+                i++;
+                swap(roots, i, j);
+                swap(sizes, i, j);
+            }
+        }
+        swap(roots, i + 1, right);
+        swap(sizes, i + 1, right);
+        return i + 1;
+    }
+
+
+
+
+    public static void fastSort(int[] roots, int[] sizes, int left, int right) {
+        if (left < right) {
+            int index = partitioning(roots, sizes, left, right);
+            fastSort(roots, sizes, left, index - 1);
+            fastSort(roots, sizes, index + 1, right);
+        }
+    }
+
+
+
+
+
+
+
+    //-------------------------------------------------------------------------------------
+    //                                  HashMaps
+    //-------------------------------------------------------------------------------------
+
+
+    public static HashMap<String, HashMap<Integer, List<Integer>>> createXYMap(int[] xArray, int[] yArray, int[] imagePixels) {
+        HashMap<Integer, List<Integer>> xMap = new HashMap<>();
+        HashMap<Integer, List<Integer>> yMap = new HashMap<>();
+
+        for (int i = 0; i < xArray.length; i++) {
+            if (xArray[i] != -1) {
+                int root = UnionAlgo.find(imagePixels, i);
+                if (!xMap.containsKey(root)) {
+                    xMap.put(root, new ArrayList<Integer>());
+                    yMap.put(root, new ArrayList<Integer>());
+                }
+                xMap.get(root).add(xArray[i]);
+                yMap.get(root).add(yArray[i]);
+
+            }
+        }
+        HashMap<String, HashMap<Integer, List<Integer>>> resultMap = new HashMap<>();
+        resultMap.put("xMap", xMap);
+        resultMap.put("yMap", yMap);
+        return resultMap;
+    }
+
+
+
+    public List<Map.Entry<Integer, Integer>> sortSpots(int minSize) {
+        HashMap<Integer, Integer> sizeMap = createSizeMap();
+        int[] roots = new int[sizeMap.size()];
+        int[] sizes = new int[sizeMap.size()];
+
+        int index = 0;
+        for (int root : sizeMap.keySet()) {
+            roots[index] = root;
+            sizes[index] = sizeMap.get(root);
+            index++;
+        }
+
+        fastSort(roots, sizes, 0, roots.length - 1);
+
+        List<Map.Entry<Integer, Integer>> sortedSpotMap  = new ArrayList<>();
+        for (int i = 0; i < roots.length; i++) {
+            if (sizes[i] > minSize) {
+                int root = roots[i];
+                int size = sizes[i];
+                sortedSpotMap.add(new AbstractMap.SimpleEntry<>(root, size));
+            }
+        }
+        return sortedSpotMap;
+    }
 
 
 
@@ -167,29 +325,6 @@ public class ImageAdjustments {
 
 
 
-    //Color a single random object with a random color in the image
-    public void colorRandomObject(ImageView imageView, WritableImage writableImage) {
-        int width = (int) writableImage.getWidth();
-        HashMap<Integer, List<Integer>> spotMap = createLabelMap(imagePixels).get("spotMap");
-
-        PixelWriter imageWriter = writableImage.getPixelWriter();
-        Random rand = new Random();
-        int random = rand.nextInt(spotMap.size());
-        int i = 0;
-        for (int item : spotMap.keySet()) {
-            if (i == random) {
-                List<Integer> spots = spotMap.get(item);
-                for (int spot : spots) {
-                    imageWriter.setColor(spot % width, spot / width, Color.color(Math.random(), Math.random(), Math.random()));
-                }
-            }
-            i++;
-        }
-
-
-
-        imageView.setImage(writableImage);
-    }
 
 
     public HashMap<String, HashMap<Integer, List<Integer>>> createLabelMap(int[] imagePixel) {
@@ -239,12 +374,23 @@ public class ImageAdjustments {
 
 
 
-    public void drawCircles(HashMap<Integer, List<Integer>> spotMap, WritableImage imageStandard, WritableImage image2, Color circleColor, int minPix) {
+
+
+
+    //-------------------------------------------------------------------------------
+    //                                  Draw Functions
+    //-------------------------------------------------------------------------------
+
+
+    public void drawCircles(HashMap<Integer, List<Integer>> spotMap, WritableImage imageStandard, WritableImage image2,ImageView imageView, ImageView editedImage, Color circleColor, int minPix) {
         PixelWriter imageWriter = imageStandard.getPixelWriter();
         PixelWriter image2Writer = image2.getPixelWriter();
 
         HashMap<Integer, Integer> sizeMap = createSizeMap();
 
+        HashMap<String, HashMap<Integer, List<Integer>>> xyMap = createXYMap(xArray, yArray, imagePixels);
+
+        int counter = 1;
         //iterate through the spotMap
         for (int root : spotMap.keySet()) {
             //get the list of pixels for each spot
@@ -252,6 +398,7 @@ public class ImageAdjustments {
             //if the spot is big enough
             if (spots.size() >= minPix) {
 
+                //draw the circles
                 int circleRadius;
                 if (sizeMap.get(root) < 10)
                     circleRadius = 3;
@@ -281,10 +428,10 @@ public class ImageAdjustments {
                 int xSum = 15;
                 int ySum = 15;
                 for (int spot : spots) {
-                    double x = spot % imageStandard.getWidth();
-                    double y = spot / imageStandard.getWidth();
-                    xSum += x;
-                    ySum += y;
+                    double x2 = spot % imageStandard.getWidth();
+                    double y2 = spot / imageStandard.getWidth();
+                    xSum += x2;
+                    ySum += y2;
                 }
                 int xCenter = xSum / spots.size();
                 int yCenter = ySum / spots.size();
@@ -306,15 +453,156 @@ public class ImageAdjustments {
                     }
                 }
                 numberOfCircles++;
+
+                //color not big enough spots black
+
+//            HashMap<Integer, List<Integer>> xMap = xyMap.get("xMap");
+//            HashMap<Integer, List<Integer>> yMap = xyMap.get("yMap");
+//
+//            List<Integer> xValues = xMap.get(root);
+//            List<Integer> yValues = yMap.get(root);
+//            int lastIndex = xValues.size() - 1;
+//            int x1 = xValues.get(lastIndex) - 20;
+//            int y1 = yValues.get(lastIndex) + 20;
+//
+//            // Create a Canvas object with the same dimensions as the ImageView
+//            Canvas canvas = new Canvas(imageView.getImage().getWidth(), imageView.getImage().getHeight());
+//            Canvas canvas2 = new Canvas(editedImage.getImage().getWidth(), editedImage.getImage().getHeight());
+//
+//            // Get the GraphicsContext of the Canvas
+//            GraphicsContext gc = canvas.getGraphicsContext2D();
+//            GraphicsContext gc2 = canvas2.getGraphicsContext2D();
+//
+//            // Set the font and color for the number
+//            gc.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+//            gc2.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+//            gc.setFill(Color.GREEN);
+//            gc2.setFill(Color.GREEN);
+//
+//            // Draw the number on the Canvas at the specified x and y coordinates
+//            gc.fillText(String.valueOf(counter), x1, y1);
+//            gc2.fillText(String.valueOf(counter), x1, y1);
+//            counter++;
+//
+//            // Create an ImageView with the same image as the original ImageView
+//            ImageView numberedImage = new ImageView(imageView.getImage());
+//            ImageView numberedImage2 = new ImageView(editedImage.getImage());
+//
+//            // Add the Canvas to a Group and set it as the content of the new ImageView
+//            Group group = new Group(numberedImage, canvas);
+//            Group group2 = new Group(numberedImage2, canvas2);
+//            numberedImage = new ImageView(group.snapshot(null, null));
+//            numberedImage2 = new ImageView(group2.snapshot(null, null));
+//
+//            // Set the new ImageView as the content of the parent Pane
+//            imageView.setImage(numberedImage.getImage());
+//            editedImage.setImage(numberedImage2.getImage());
+//
+//
             }
-            //color not big enough spots black
-            else {
+
+            else{
                 for (int spot : spots) {
                     double x = spot % imageStandard.getWidth();
                     double y = spot / imageStandard.getWidth();
-                    image2Writer.setColor((int) x, (int) y,Color.BLACK);
+                    image2Writer.setColor((int) x, (int) y, Color.BLACK);
                 }
             }
+
         }
+    }
+
+
+
+
+    public void drawNumbers(HashMap<Integer, List<Integer>> spotMap, WritableImage imageStandard, WritableImage image2,ImageView imageView, ImageView editedImage, int minPix) {
+
+        List<Map.Entry<Integer, Integer>> sortedSpotList = sortSpots(minPix);
+
+        HashMap<String, HashMap<Integer, List<Integer>>> xyMap = createXYMap(xArray, yArray, imagePixels);
+
+        //iterate through the spotMap
+        for (int root : spotMap.keySet()) {
+            //get the list of pixels for each spot
+            List<Integer> spots = spotMap.get(root);
+            //if the spot is big enough
+            if (spots.size() >= minPix) {
+                int counter = 0;
+                for(int i = 0; i < sortedSpotList.size(); i ++){
+                    Map.Entry<Integer, Integer> j = sortedSpotList.get(i);
+                    if(root == j.getKey()){
+                        counter = i+1;
+                    }
+                }
+
+                HashMap<Integer, List<Integer>> xMap = xyMap.get("xMap");
+                HashMap<Integer, List<Integer>> yMap = xyMap.get("yMap");
+
+                List<Integer> xValues = xMap.get(root);
+                List<Integer> yValues = yMap.get(root);
+                int lastIndex = xValues.size() - 1;
+                int x1 = xValues.get(lastIndex) - 20;
+                int y1 = yValues.get(lastIndex) + 20;
+
+                // Create a Canvas object with the same dimensions as the ImageView
+                Canvas canvas = new Canvas(imageView.getImage().getWidth(), imageView.getImage().getHeight());
+                Canvas canvas2 = new Canvas(editedImage.getImage().getWidth(), editedImage.getImage().getHeight());
+
+                // Get the GraphicsContext of the Canvas
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+                GraphicsContext gc2 = canvas2.getGraphicsContext2D();
+
+                // Set the font and color for the number
+                gc.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+                gc2.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+                gc.setFill(Color.YELLOW);
+                gc2.setFill(Color.YELLOW);
+
+                // Draw the number on the Canvas at the specified x and y coordinates
+                gc.fillText(String.valueOf(counter), x1, y1);
+                gc2.fillText(String.valueOf(counter), x1, y1);
+
+                // Create an ImageView with the same image as the original ImageView
+                ImageView numberedImage = new ImageView(imageView.getImage());
+                ImageView numberedImage2 = new ImageView(editedImage.getImage());
+
+                // Add the Canvas to a Group and set it as the content of the new ImageView
+                Group group = new Group(numberedImage, canvas);
+                Group group2 = new Group(numberedImage2, canvas2);
+                numberedImage = new ImageView(group.snapshot(null, null));
+                numberedImage2 = new ImageView(group2.snapshot(null, null));
+
+                // Set the new ImageView as the content of the parent Pane
+                imageView.setImage(numberedImage.getImage());
+                editedImage.setImage(numberedImage2.getImage());
+            }
+        }
+    }
+
+
+
+    //Color a single random object with a random color in the image
+    public void colorRandomObject(ImageView imageView, WritableImage writableImage) {
+        HashMap<Integer, List<Integer>> spotMap = createLabelMap(imagePixels).get("spotMap");
+
+        Random rand = new Random();
+        int randomObject = rand.nextInt();
+        System.out.println(spotMap);
+        System.out.println(randomObject);
+
+//        int[] spotsRoot = new int[spotMap.get(randomObject).size()];
+//        System.out.println(spotMap.get(randomObject));
+//        for(int i = 0; i < spotMap.get(randomObject).size(); i++) {
+//            spotsRoot[i] = spotMap.get(randomObject).get(i);
+//        }
+//
+//        int randomColor = rand.nextInt(0xffffff + 1);
+//        Color color = Color.rgb((randomColor >> 16) & 0xff, (randomColor >> 8) & 0xff, randomColor & 0xff);
+//        PixelWriter pixelWriter = writableImage.getPixelWriter();
+//        for(int i = 0; i < spotsRoot.length; i++) {
+//            pixelWriter.setColor(spotsRoot[i] % width, spotsRoot[i] / width, color);
+//        }
+//        imageView.setImage(writableImage);
+
     }
 }

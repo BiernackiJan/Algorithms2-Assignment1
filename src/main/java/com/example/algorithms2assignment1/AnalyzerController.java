@@ -103,17 +103,6 @@ public class AnalyzerController {
 
         WritableImage writableImage2 = new WritableImage(width, height);
 
-        PixelReader pixelReader = defaultImage.getPixelReader();
-        PixelWriter pixelWriter = writableImage2.getPixelWriter();
-
-
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++){
-                Color color = pixelReader.getColor(x, y);
-                pixelWriter.setColor(x, y, color);
-            }
-        }
-
 
         ImageAdjustments adjustments = new ImageAdjustments();
         adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList);
@@ -148,6 +137,7 @@ public class AnalyzerController {
         int width = (int) defaultImage.getWidth();
         ImageAdjustments adjustments = new ImageAdjustments();
         WritableImage writableImage2 = new WritableImage(width, height);
+
 
         adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList);
         adjustments.colorRandomObject(editedImage,writableImage1);
