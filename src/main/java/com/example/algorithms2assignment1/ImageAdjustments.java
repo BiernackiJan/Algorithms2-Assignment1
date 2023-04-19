@@ -23,7 +23,7 @@ public class ImageAdjustments {
     PixelWriter writer;
     int[] imagePixels;
 
-    int[] stars;
+    static int[] stars;
     int descOrder[];
 
     int xArray[];
@@ -533,18 +533,22 @@ public class ImageAdjustments {
         for (int root : spotMap.get("valueMap").keySet()) { // For each root in the spot map
             // Check if the spot size is greater than or equal to minSize
             if (spotMap.get("valueMap").get(root).size() >= minSize) {
-                // Generate a random color
-                Color randomColor = Color.rgb((int)(Math.random() * 256), (int)(Math.random() * 256), (int)(Math.random() * 256));
+                for (int i = 0; i < stars.length; i++) {
+                    if(root == stars[i]) {
+                        // Generate a random color
+                        Color randomColor = Color.rgb((int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math.random() * 256));
 
-                // Get the x and y coordinates for the pixels in the spot
-                List<Integer> xCoords = xyMap.get("xMap").get(root);
-                List<Integer> yCoords = xyMap.get("yMap").get(root);
+                        // Get the x and y coordinates for the pixels in the spot
+                        List<Integer> xCoords = xyMap.get("xMap").get(root);
+                        List<Integer> yCoords = xyMap.get("yMap").get(root);
 
-                // Set the color of each pixel in the spot to the random color
-                for (int i = 0; i < xCoords.size(); i++) {
-                    int x = xCoords.get(i);
-                    int y = yCoords.get(i);
-                    pixelWriter.setColor(x, y, randomColor);
+                        // Set the color of each pixel in the spot to the random color
+                        for (int j = 0; j < xCoords.size(); j++) {
+                            int x = xCoords.get(j);
+                            int y = yCoords.get(j);
+                            pixelWriter.setColor(x, y, randomColor);
+                        }
+                    }
                 }
             }
         }
