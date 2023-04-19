@@ -590,19 +590,6 @@ public class ImageAdjustments {
         System.out.println(spotMap);
         System.out.println(randomObject);
 
-//        int[] spotsRoot = new int[spotMap.get(randomObject).size()];
-//        System.out.println(spotMap.get(randomObject));
-//        for(int i = 0; i < spotMap.get(randomObject).size(); i++) {
-//            spotsRoot[i] = spotMap.get(randomObject).get(i);
-//        }
-//
-//        int randomColor = rand.nextInt(0xffffff + 1);
-//        Color color = Color.rgb((randomColor >> 16) & 0xff, (randomColor >> 8) & 0xff, randomColor & 0xff);
-//        PixelWriter pixelWriter = writableImage.getPixelWriter();
-//        for(int i = 0; i < spotsRoot.length; i++) {
-//            pixelWriter.setColor(spotsRoot[i] % width, spotsRoot[i] / width, color);
-//        }
-//        imageView.setImage(writableImage);
 
     }
 }
