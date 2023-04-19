@@ -60,7 +60,7 @@ public class AnalyzerController {
     public void fileChooser(){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
-        //File file = fileChooser.showOpenDialog(null);
+//        File file = fileChooser.showOpenDialog(null);
         //laptop
         File file = new File("C:\\Users\\janbi\\OneDrive - South East Technological University (Waterford Campus)\\Wit\\Semester 4\\Data Bases & Algorithms 2\\stars.jpg");
         //PC
@@ -147,15 +147,20 @@ public class AnalyzerController {
     }
 
 
+    public void colorOne(ActionEvent event){
+        int height = (int) defaultImage.getHeight();
+        int width = (int) defaultImage.getWidth();
+        ImageAdjustments adjustments = new ImageAdjustments();
+        WritableImage writableImage2 = new WritableImage(width, height);
 
-
+        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList,2);
+    }
 
     public void colorRand(ActionEvent event){
         int height = (int) defaultImage.getHeight();
         int width = (int) defaultImage.getWidth();
         ImageAdjustments adjustments = new ImageAdjustments();
         WritableImage writableImage2 = new WritableImage(width, height);
-
 
         adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList,1);
     }
