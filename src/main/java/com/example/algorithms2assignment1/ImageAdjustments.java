@@ -15,10 +15,13 @@ import resources.UnionAlgo;
 import java.util.*;
 
 
+
 public class ImageAdjustments {
 
     int numberOfCircles = 0;
-    int imagePixels[];
+
+    PixelWriter writer;
+    static int[] imagePixels;
 
     int descOrder[];
 
@@ -31,7 +34,7 @@ public class ImageAdjustments {
     ArrayList<Integer> positions = new ArrayList<>();
 
 
-    public void segmentImage(Image imageStandard, WritableImage writableImage, WritableImage writableImage2, ImageView imageView, ImageView imageView2, double threshold, int minPix, TreeView treeView) {
+    public void segmentImage(Image imageStandard, WritableImage writableImage, WritableImage writableImage2, ImageView imageView, ImageView imageView2, double threshold, int minPix, TreeView treeView, int adjust) {
         // Get the height and width of the image
         int height = (int) imageStandard.getHeight();
         int width = (int) imageStandard.getWidth();
@@ -84,12 +87,17 @@ public class ImageAdjustments {
             }
         }
 
+        writer = pixelWriter;
+
         mergeUnionArray(width);
         HashMap<Integer, List<Integer>> spotMap = createLabelMap(imagePixels).get("spotMap");
         HashMap<Integer, List<Integer>> valueMap = createLabelMap(imagePixels).get("valueMap");
         HashMap<Integer, Integer> sizeMap = createSizeMap();
 
 
+        if(adjust == 1){
+            colorRandom(imagePixels, minPix, pixelWriter, xArray, yArray);
+        }
 
 
         //add objects to tree view
@@ -175,30 +183,6 @@ public class ImageAdjustments {
                 }
             }
         }
-
-
-        //Put roots in the descOrder array from largest to smallest
-//        System.out.println(positions);
-//        System.out.println(sizeList);
-        int list1[];
-        list1 = new int[spotMap.size()];
-
-        descOrder = new int[spotMap.size()];
-
-        for(int i = 0; i < sizeList.size(); i++){
-            list1[i] = sizeList.get(i);
-        }
-
-
-        for(int root : spotMap.keySet()){
-            for(int i = 0; i < sizeList.size(); i++) {
-                int s = sizeList.get(i);
-                descOrder[s] = root;
-            }
-        }
-
-
-
 
         for (int i = 0; i < positions.size(); i++) {
             rootItem.getChildren().add((TreeItem) list.get(positions.get(i)));
@@ -327,7 +311,7 @@ public class ImageAdjustments {
 
 
 
-    public HashMap<String, HashMap<Integer, List<Integer>>> createLabelMap(int[] imagePixel) {
+    public static HashMap<String, HashMap<Integer, List<Integer>>> createLabelMap(int[] imagePixel) {
         HashMap<Integer, List<Integer>> spotMap = new HashMap<>();
         HashMap<Integer, List<Integer>> valueMap = new HashMap<>();
 
@@ -582,14 +566,29 @@ public class ImageAdjustments {
 
 
     //Color a single random object with a random color in the image
-    public void colorRandomObject(ImageView imageView, WritableImage writableImage) {
-        HashMap<Integer, List<Integer>> spotMap = createLabelMap(imagePixels).get("spotMap");
+    public static void colorRandom(int[] pixelArray, int minSize, PixelWriter pixelWriter, int [] xArray, int [] yArray) {
+        // Create the spot map and XY map
+        HashMap<String, HashMap<Integer, List<Integer>>> spotMap = createLabelMap(pixelArray);
+        HashMap<String, HashMap<Integer, List<Integer>>> xyMap = createXYMap(xArray, yArray,pixelArray);
 
-        Random rand = new Random();
-        int randomObject = rand.nextInt();
-        System.out.println(spotMap);
-        System.out.println(randomObject);
+        // Iterate over each spot in the spot map
+        for (int root : spotMap.get("valueMap").keySet()) { // For each root in the spot map
+            // Check if the spot size is greater than or equal to minSize
+            if (spotMap.get("valueMap").get(root).size() >= minSize) {
+                // Generate a random color
+                Color randomColor = Color.rgb((int)(Math.random() * 256), (int)(Math.random() * 256), (int)(Math.random() * 256));
 
+                // Get the x and y coordinates for the pixels in the spot
+                List<Integer> xCoords = xyMap.get("xMap").get(root);
+                List<Integer> yCoords = xyMap.get("yMap").get(root);
 
+                // Set the color of each pixel in the spot to the random color
+                for (int i = 0; i < xCoords.size(); i++) {
+                    int x = xCoords.get(i);
+                    int y = yCoords.get(i);
+                    pixelWriter.setColor(x, y, randomColor);
+                }
+            }
+        }
     }
 }

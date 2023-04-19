@@ -45,7 +45,6 @@ public class AnalyzerController {
     }
 
 
-    //TODO: Number objects in image from largest to smallest
     //TODO: Color the large enough objects in random colors in the black and white image
     //TODO: Color one object randomly in the edited image
 
@@ -105,7 +104,7 @@ public class AnalyzerController {
 
 
         ImageAdjustments adjustments = new ImageAdjustments();
-        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList);
+        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList,0);
 
         numStars.setText(String.valueOf(adjustments.numberOfCircles));
     }
@@ -139,8 +138,7 @@ public class AnalyzerController {
         WritableImage writableImage2 = new WritableImage(width, height);
 
 
-        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList);
-        adjustments.colorRandomObject(editedImage,writableImage1);
+        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList,1);
     }
 
 
