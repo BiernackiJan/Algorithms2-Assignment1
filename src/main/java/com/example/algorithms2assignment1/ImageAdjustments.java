@@ -115,7 +115,7 @@ public class ImageAdjustments {
         drawCircles(spotMap, writableImage, writableImage2,imageView, imageView2, Color.BLUE, minPix);
 
 //        numberObjects(imageView,imageView2,minPix);
-        drawNumbers(spotMap, writableImage, writableImage2, imageView, imageView2, minPix);
+        drawNumbers(spotMap, imageView, imageView2, minPix);
     }
 
 
@@ -130,6 +130,7 @@ public class ImageAdjustments {
 
         int itemNum = 1;
         int star = 0;
+        stars = new int[spotMap.size()];
 
         for (int item : spotMap.keySet()) {
             List<Integer> spots = spotMap.get(item);
@@ -139,7 +140,7 @@ public class ImageAdjustments {
             if (spots.size() >= minPix) {
                 int size = spots.size();
                 sizeList.add(size);
-                stars[star] = spots;
+                stars[star] = item;
 
                 TreeItem itemItem = new TreeItem<>(itemNum);
                 itemItem.getChildren().add(new TreeItem<>("Num Pixels: " + spots.size()));
@@ -161,6 +162,7 @@ public class ImageAdjustments {
                 itemItem.getChildren().add(new TreeItem<>("Estimated Oxygen: " + blue));
 
                 list.add(itemItem);
+                star++;
             }
         }
 
@@ -324,8 +326,8 @@ public class ImageAdjustments {
             if (imagePixel[i] != -1) {
                 int root = UnionAlgo.find(imagePixel, i);
                 if (!spotMap.containsKey(root)) {
-                    spotMap.put(root, new ArrayList<Integer>());
-                    valueMap.put(root, new ArrayList<Integer>());
+                    spotMap.put(root, new ArrayList<>());
+                    valueMap.put(root, new ArrayList<>());
                 }
                 valueMap.get(root).add(imagePixel[i]);
                 if (!spotMap.get(root).contains(imagePixel[i])) {
@@ -376,8 +378,6 @@ public class ImageAdjustments {
         PixelWriter image2Writer = image2.getPixelWriter();
 
         HashMap<Integer, Integer> sizeMap = createSizeMap();
-
-        HashMap<String, HashMap<Integer, List<Integer>>> xyMap = createXYMap(xArray, yArray, imagePixels);
 
         //iterate through the spotMap
         for (int root : spotMap.keySet()) {
@@ -457,23 +457,22 @@ public class ImageAdjustments {
 
 
 
-    public void drawNumbers(HashMap<Integer, List<Integer>> spotMap, WritableImage imageStandard, WritableImage image2,ImageView imageView, ImageView editedImage, int minPix) {
+    public void drawNumbers(HashMap<Integer, List<Integer>> spotMap, ImageView imageView, ImageView editedImage, int minPix) {
 
         List<Map.Entry<Integer, Integer>> sortedSpotList = sortSpots(minPix);
 
         HashMap<String, HashMap<Integer, List<Integer>>> xyMap = createXYMap(xArray, yArray, imagePixels);
 
         //iterate through the spotMap
-        int counter = 0;
         for (int root : spotMap.keySet()) {
             //get the list of pixels for each spot
             List<Integer> spots = spotMap.get(root);
             //if the spot is big enough
             if (spots.size() >= minPix) {
+                int counter = 0;
 
                 for(int i = 0; i < sortedSpotList.size(); i ++){
-                    Map.Entry<Integer, Integer> j = sortedSpotList.get(i);
-                    if(root == j.getKey()){
+                    if(root == stars[i]){
                         counter = i + 1;
                     }
                 }
@@ -565,11 +564,18 @@ public class ImageAdjustments {
             }
         }
 
-        System.out.println(acceptedSpots);
+        int numStars = 0;
+
+        for(int i = 0; i < stars.length; i++){
+            if(stars[i] != 0){
+                numStars++;
+            }
+        }
+
 
         // Choose a random star from the list of large stars
         if (!acceptedSpots.isEmpty()) {
-            int randomRoot = acceptedSpots.get((int)(Math.random() * acceptedSpots.size()));
+            int randomRoot = stars[(int)(Math.random() * numStars)];
 
             // Generate a random color
             Color randomColor = Color.rgb((int)(Math.random() * 256), (int)(Math.random() * 256), (int)(Math.random() * 256));
