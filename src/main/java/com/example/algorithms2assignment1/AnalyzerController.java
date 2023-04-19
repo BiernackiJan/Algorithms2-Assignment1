@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -129,6 +130,24 @@ public class AnalyzerController {
 
     @FXML
     private TreeView<String> objectList;
+
+
+    @FXML
+    private void expandAllNodes(ActionEvent event) {
+        expandTreeView(objectList.getRoot());
+    }
+
+    private void expandTreeView(TreeItem<String> item) {
+        if (item != null && !item.isLeaf()) {
+            item.setExpanded(true);
+            for (TreeItem<String> child : item.getChildren()) {
+                expandTreeView(child);
+            }
+        }
+    }
+
+
+
 
 
     public void colorRand(ActionEvent event){

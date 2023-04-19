@@ -75,7 +75,7 @@
         </VBox>
         <StackPane layoutX="258.0" prefHeight="576.0" prefWidth="793.0" style="-fx-background-color: #02030A;">
             <children>
-                <Pane fx:id="pnlOverview" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
+                <Pane fx:id="pnlOverview" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cbd0d1" height="321.0" layoutX="60.0" layoutY="122.0" stroke="BLACK" strokeType="INSIDE" width="309.0" />
                   <ImageView fx:id="image" fitHeight="321.0" fitWidth="309.0" layoutX="60.0" layoutY="122.0" pickOnBounds="true" />
@@ -92,14 +92,15 @@
                      </font>
                   </Label>
                   <TextField fx:id="minPixels" alignment="CENTER" layoutX="94.0" layoutY="479.0" prefHeight="27.0" prefWidth="130.0" promptText="Minimum Pixels" style="-fx-background-color: #02030A; -fx-border-color: #B7C3D7; -fx-border-radius: 2em;" stylesheets="@style.css" />
+                  <Button layoutX="349.0" layoutY="478.0" mnemonicParsing="false" onAction="#colorRand" prefHeight="29.0" prefWidth="96.0" stylesheets="@style.css" text="Color All" />
                </children>
                 </Pane>
-                <Pane fx:id="pnlSearch" prefHeight="200.0" prefWidth="200.0" visible="false">
+                <Pane fx:id="pnlSearch" prefHeight="200.0" prefWidth="200.0">
                <children>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cbd0d1" height="321.0" layoutX="52.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="309.0" />
                   <ImageView fx:id="circledImage" fitHeight="321.0" fitWidth="309.0" layoutX="52.0" layoutY="60.0" pickOnBounds="true" />
                   <TreeView fx:id="objectList" layoutX="446.0" layoutY="60.0" prefHeight="412.0" prefWidth="301.0" />
-                  <Button layoutX="172.0" layoutY="401.0" mnemonicParsing="false" onAction="#colorRand" prefHeight="29.0" prefWidth="96.0" stylesheets="@style.css" text="Color One" />
+                  <Button layoutX="553.0" layoutY="482.0" mnemonicParsing="false" onAction="#expandAllNodes" prefHeight="29.0" prefWidth="87.0" stylesheets="@style.css" text="Expand " />
                </children></Pane>
             </children>
         </StackPane>

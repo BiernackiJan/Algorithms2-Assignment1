@@ -95,14 +95,13 @@ public class ImageAdjustments {
         HashMap<Integer, Integer> sizeMap = createSizeMap();
 
 
-        if(adjust == 1){
-            colorRandom(imagePixels, minPix, pixelWriter, xArray, yArray);
-        }
-
 
         //add objects to tree view
         addToTreeView(treeView, spotMap, imageStandard, minPix);
 
+        if(adjust == 1){
+            colorRandom(imagePixels, minPix, imageWriter, xArray, yArray);
+        }
 
         imageView.setImage(writableImage);
         imageView2.setImage(writableImage2);
