@@ -1,5 +1,6 @@
 package resources;
 
+
 public class UnionAlgo {
     public static int find(int[] a, int id) {
         if(a[id]<0) return a[id];
