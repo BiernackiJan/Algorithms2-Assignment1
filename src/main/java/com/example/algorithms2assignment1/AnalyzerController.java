@@ -105,9 +105,13 @@ public class AnalyzerController {
 
 
         ImageAdjustments adjustments = new ImageAdjustments();
-        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList,0);
+        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList,0,0);
 
         numStars.setText(String.valueOf(adjustments.numberOfCircles));
+
+        for(int i = 0; i < adjustments.numberOfCircles; i++){
+            chooseStar.getItems().add(i+1);
+        }
     }
 
     public void adjust(ActionEvent actionEvent) {
@@ -128,9 +132,62 @@ public class AnalyzerController {
         }
     }
 
+
+
+    public void colorRand(ActionEvent event){
+        int height = (int) defaultImage.getHeight();
+        int width = (int) defaultImage.getWidth();
+        ImageAdjustments adjustments = new ImageAdjustments();
+        WritableImage writableImage2 = new WritableImage(width, height);
+
+        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList,1,0);
+    }
+
+
+
+    public void colorOne(ActionEvent event){
+        int height = (int) defaultImage.getHeight();
+        int width = (int) defaultImage.getWidth();
+        ImageAdjustments adjustments = new ImageAdjustments();
+        WritableImage writableImage2 = new WritableImage(width, height);
+
+        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList,2, 0);
+    }
+
+
+    @FXML
+    private ComboBox<Integer> chooseStar;
+
+//    public void chosenStar(ActionEvent event){
+//        int height = (int) defaultImage.getHeight();
+//        int width = (int) defaultImage.getWidth();
+//        ImageAdjustments adjustments = new ImageAdjustments();
+//        WritableImage writableImage2 = new WritableImage(width, height);
+//
+//        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList,0, chooseStar.getSelectionModel().getSelectedIndex());
+//    }
+
+    public void colorChosen(ActionEvent event){
+        int height = (int) defaultImage.getHeight();
+        int width = (int) defaultImage.getWidth();
+        ImageAdjustments adjustments = new ImageAdjustments();
+        WritableImage writableImage2 = new WritableImage(width, height);
+
+        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList,3, chooseStar.getSelectionModel().getSelectedIndex());
+    }
+
+
+
+
+
+
+    //--------------------------------------------------------------------------------------
+    //                                       Pane 2
+    //--------------------------------------------------------------------------------------
+
+
     @FXML
     private TreeView<String> objectList;
-
 
     @FXML
     private void expandAllNodes(ActionEvent event) {
@@ -147,23 +204,9 @@ public class AnalyzerController {
     }
 
 
-    public void colorOne(ActionEvent event){
-        int height = (int) defaultImage.getHeight();
-        int width = (int) defaultImage.getWidth();
-        ImageAdjustments adjustments = new ImageAdjustments();
-        WritableImage writableImage2 = new WritableImage(width, height);
 
-        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList,2);
-    }
 
-    public void colorRand(ActionEvent event){
-        int height = (int) defaultImage.getHeight();
-        int width = (int) defaultImage.getWidth();
-        ImageAdjustments adjustments = new ImageAdjustments();
-        WritableImage writableImage2 = new WritableImage(width, height);
 
-        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList,1);
-    }
 
 
 

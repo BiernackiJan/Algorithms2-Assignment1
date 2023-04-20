@@ -35,7 +35,7 @@ public class ImageAdjustments {
     ArrayList<Integer> positions = new ArrayList<>();
 
 
-    public void segmentImage(Image imageStandard, WritableImage writableImage, WritableImage writableImage2, ImageView imageView, ImageView imageView2, double threshold, int minPix, TreeView treeView, int adjust) {
+    public void segmentImage(Image imageStandard, WritableImage writableImage, WritableImage writableImage2, ImageView imageView, ImageView imageView2, double threshold, int minPix, TreeView treeView, int adjust, int star) {
         // Get the height and width of the image
         int height = (int) imageStandard.getHeight();
         int width = (int) imageStandard.getWidth();
@@ -107,14 +107,16 @@ public class ImageAdjustments {
             colorOne(imagePixels, minPix, imageWriter, xArray, yArray);
         }
 
+        if(adjust == 3){
+            chooseToColor(minPix, imageWriter, xArray, yArray, star);
+        }
+
         imageView.setImage(writableImage);
         imageView2.setImage(writableImage2);
-
 
         //draw circles on both black and white image and colored image on next plane view
         drawCircles(spotMap, writableImage, writableImage2,imageView, imageView2, Color.BLUE, minPix);
 
-//        numberObjects(imageView,imageView2,minPix);
         drawNumbers(spotMap, imageView, imageView2, minPix);
     }
 
@@ -595,8 +597,43 @@ public class ImageAdjustments {
                 pixelWriter.setColor(x, y, randomColor);
             }
         }
-
     }
 
 
+    public void chooseToColor( int minSize, PixelWriter pixelWriter, int[] xArray, int[] yArray, int index){
+        //Create spot map and XY map
+        HashMap<String, HashMap<Integer, List<Integer>>> spotMap = createLabelMap(imagePixels);
+        HashMap<String, HashMap<Integer, List<Integer>>> xyMap = createXYMap(xArray, yArray, imagePixels);
+
+        // Get a list of stars with sizes greater than or equal to minSize
+        List<Integer> acceptedSpots = new ArrayList<>();
+        for (int root : spotMap.get("valueMap").keySet()) {
+            if (spotMap.get("valueMap").get(root).size() > minSize) {
+                acceptedSpots.add(root);
+            }
+        }
+//
+//        int numStars = 0;
+//
+//        for(int i = 0; i < stars.length; i++){
+//            if(stars[i] != 0){
+//                numStars++;
+//            }
+//        }
+
+        // Generate a random color
+        Color randomColor = Color.rgb((int)(Math.random() * 256), (int)(Math.random() * 256), (int)(Math.random() * 256));
+
+
+        // Get the x and y coordinates for the pixels in the star
+        List<Integer> xCoords = xyMap.get("xMap").get(stars[index]);
+        List<Integer> yCoords = xyMap.get("yMap").get(stars[index]);
+
+        // Set the color of each pixel in the star to the random color
+        for (int i = 0; i < xCoords.size(); i++) {
+            int x = xCoords.get(i);
+            int y = yCoords.get(i);
+            pixelWriter.setColor(x, y, randomColor);
+        }
+    }
 }
