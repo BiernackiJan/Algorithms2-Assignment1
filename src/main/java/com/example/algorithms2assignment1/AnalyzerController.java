@@ -144,6 +144,16 @@ public class AnalyzerController {
     }
 
 
+    public void highlightAll(ActionEvent event){
+        int height = (int) defaultImage.getHeight();
+        int width = (int) defaultImage.getWidth();
+        ImageAdjustments adjustments = new ImageAdjustments();
+        WritableImage writableImage2 = new WritableImage(width, height);
+
+        adjustments.segmentImage(defaultImage, writableImage1,  writableImage2, editedImage, circledImage, threshholdChange.getValue() / 50, Integer.parseInt(minPixels.getText()),objectList,4,0);
+    }
+
+
 
     public void colorOne(ActionEvent event){
         int height = (int) defaultImage.getHeight();

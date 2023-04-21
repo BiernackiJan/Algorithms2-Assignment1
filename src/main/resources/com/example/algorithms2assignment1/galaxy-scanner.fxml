@@ -96,6 +96,7 @@
                   <Button layoutX="349.0" layoutY="492.0" mnemonicParsing="false" onAction="#colorOne" prefHeight="29.0" prefWidth="96.0" stylesheets="@style.css" text="Color One" />
                   <ComboBox id="btnBrighter" fx:id="chooseStar" layoutX="482.0" layoutY="521.0" prefHeight="20.0" prefWidth="87.0" stylesheets="@style.css" />
                   <Button layoutX="577.0" layoutY="519.0" mnemonicParsing="false" onAction="#colorChosen" prefHeight="29.0" prefWidth="96.0" stylesheets="@style.css" text="Color Chosen" />
+                  <Button layoutX="233.0" layoutY="519.0" mnemonicParsing="false" onAction="#highlightAll" prefHeight="29.0" prefWidth="96.0" stylesheets="@style.css" text="Color Yellow" />
                </children>
                 </Pane>
                 <Pane fx:id="pnlSearch" prefHeight="200.0" prefWidth="200.0" visible="false">
