@@ -46,15 +46,16 @@ public class AnalyzerController {
     }
 
 
-    //TODO: Color the large enough objects in random colors in the black and white image
-    //TODO: Color one object randomly in the edited image
-
-
+    //original Image
     private Image defaultImage;
+    //image next to original image
     private WritableImage writableImage1;
 
+    //Original colored imageView
     @FXML
     ImageView image;
+
+    //Image next to original imageView
     @FXML
     ImageView editedImage;
     public void fileChooser(){
@@ -81,7 +82,7 @@ public class AnalyzerController {
                 pixelWriter.setColor(x, y, color);
             }
         }
-
+        //set the imageViews to the loaded in image
         defaultImage = image1;
         writableImage1 = writableImage;
         editedImage.setImage(writableImage1);

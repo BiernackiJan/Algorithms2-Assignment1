@@ -148,20 +148,22 @@ public class ImageAdjustments {
         for (int item : spotMap.keySet()) {
             List<Integer> spots = spotMap.get(item);
 
-
-
+            //only do this if a spot has more or equal pixels to the minPix
             if (spots.size() >= minPix) {
                 int size = spots.size();
+                //add to the linked list
                 sizeList.add(size);
                 stars[star] = item;
 
                 TreeItem itemItem = new TreeItem<>(itemNum);
+                //add number of pixels to the tree view
                 itemItem.getChildren().add(new TreeItem<>("Num Pixels: " + spots.size()));
                 float red = 0;
                 float green = 0;
                 float blue = 0;
                 for (int spot : spots) {
                     Color color = imageReader.getColor(spot % (int) image.getWidth(), spot / (int) image.getWidth());
+                    //find the percentage of r, g, b for the gaseous analysis
                     red += color.getRed();
                     green += color.getGreen();
                     blue += color.getBlue();
@@ -170,6 +172,7 @@ public class ImageAdjustments {
                 green /= spots.size();
                 blue /= spots.size();
 
+                //add the percentages to the tree view
                 itemItem.getChildren().add(new TreeItem<>("Estimated Sulphur: " + red));
                 itemItem.getChildren().add(new TreeItem<>("Estimated Hydrogen: " + green));
                 itemItem.getChildren().add(new TreeItem<>("Estimated Oxygen: " + blue));
@@ -178,8 +181,6 @@ public class ImageAdjustments {
                 star++;
             }
         }
-
-
 
         // Create an ArrayList to store the positions of the items in the TreeView
         for (int i = 0; i < sizeList.size(); i++) {
@@ -222,7 +223,7 @@ public class ImageAdjustments {
 
 
 
-
+    //swap two elements in an int array
     public static void swap(int[] arr, int i, int j) {
         int temp = arr[i];
         arr[i] = arr[j];
@@ -230,30 +231,33 @@ public class ImageAdjustments {
     }
 
 
-    //
+    // This method partitions two integer arrays based on their size values, using the last element as the pivot.
+    // It returns the index of the pivot after partitioning.
     public static int partitioning(int[] roots, int[] sizes, int left, int right) {
-        int turn = sizes[right];
-        int i = left - 1;
+        int turn = sizes[right]; // Select the last element as the pivot
+        int i = left - 1; // Initialize the index of smaller element
         for (int j = left; j <= right - 1; j++) {
-            if (sizes[j] >= turn) {
+            if (sizes[j] >= turn) {// If current element is greater than or equal to pivot
                 i++;
-                swap(roots, i, j);
-                swap(sizes, i, j);
+                swap(roots, i, j); // Swap roots[i] and roots[j]
+                swap(sizes, i, j); // Swap sizes[i] and sizes[j]
             }
         }
-        swap(roots, i + 1, right);
-        swap(sizes, i + 1, right);
-        return i + 1;
+        swap(roots, i + 1, right); // Swap roots[i+1] and roots[right] (or pivot)
+        swap(sizes, i + 1, right); // Swap sizes[i+1] and sizes[right] (or pivot)
+        return i + 1; // Return the index of the pivot after partitioning
     }
 
 
 
 
+    // This method sorts two integer arrays in non-descending order using the quicksort algorithm.
+    // It partitions the arrays based on their size values, and recursively sorts the left and right partitions.
     public static void fastSort(int[] roots, int[] sizes, int left, int right) {
         if (left < right) {
-            int index = partitioning(roots, sizes, left, right);
-            fastSort(roots, sizes, left, index - 1);
-            fastSort(roots, sizes, index + 1, right);
+            int index = partitioning(roots, sizes, left, right);// Partition the subarray around a pivot
+            fastSort(roots, sizes, left, index - 1); // Sort the left subarray
+            fastSort(roots, sizes, index + 1, right); // Sort the right subarray
         }
     }
 
@@ -274,45 +278,45 @@ public class ImageAdjustments {
         HashMap<Integer, List<Integer>> yMap = new HashMap<>();
 
         for (int i = 0; i < xArray.length; i++) {
-            if (xArray[i] != -1) {
+            if (xArray[i] != -1) {// Ignore pixels with x-coordinate -1
                 int root = UnionAlgo.find(imagePixels, i);
                 if (!xMap.containsKey(root)) {
-                    xMap.put(root, new ArrayList<Integer>());
-                    yMap.put(root, new ArrayList<Integer>());
+                    xMap.put(root, new ArrayList<Integer>());// Initialize a new ArrayList for the x coordinates of the pixels in the set
+                    yMap.put(root, new ArrayList<Integer>());// Initialize a new ArrayList for the y coordinates of the pixels in the set
                 }
-                xMap.get(root).add(xArray[i]);
-                yMap.get(root).add(yArray[i]);
+                xMap.get(root).add(xArray[i]); // Add the x-coordinate of the pixel to the ArrayList for the root
+                yMap.get(root).add(yArray[i]); // Add the y-coordinate of the pixel to the ArrayList for the root
 
             }
         }
-        HashMap<String, HashMap<Integer, List<Integer>>> resultMap = new HashMap<>();
-        resultMap.put("xMap", xMap);
-        resultMap.put("yMap", yMap);
+        HashMap<String, HashMap<Integer, List<Integer>>> resultMap = new HashMap<>(); // Initialize the result HashMap
+        resultMap.put("xMap", xMap); // Add the xMap to the result HashMap
+        resultMap.put("yMap", yMap); // Add the yMap to the result HashMap
         return resultMap;
     }
 
 
     //create a sorted hashmap with the size of each object
     public List<Map.Entry<Integer, Integer>> sortSpots(int minSize) {
-        HashMap<Integer, Integer> sizeMap = createSizeMap();
-        int[] roots = new int[sizeMap.size()];
-        int[] sizes = new int[sizeMap.size()];
+        HashMap<Integer, Integer> sizeMap = createSizeMap(); // Create a HashMap of spot sizes using the createSizeMap() method
+        int[] roots = new int[sizeMap.size()]; // Initialize an integer array for spot roots
+        int[] sizes = new int[sizeMap.size()]; // Initialize an integer array for spot sizes
 
         int index = 0;
-        for (int root : sizeMap.keySet()) {
-            roots[index] = root;
-            sizes[index] = sizeMap.get(root);
+        for (int root : sizeMap.keySet()) { // Iterate over the keys (roots) in sizeMap
+            roots[index] = root; // Add the root to the roots array
+            sizes[index] = sizeMap.get(root); // Add the size to the sizes array
             index++;
         }
 
-        fastSort(roots, sizes, 0, roots.length - 1);
+        fastSort(roots, sizes, 0, roots.length - 1); // Sort the roots and sizes arrays in descending order by size
 
-        List<Map.Entry<Integer, Integer>> sortedSpotMap  = new ArrayList<>();
+        List<Map.Entry<Integer, Integer>> sortedSpotMap  = new ArrayList<>(); // Initialize a List of Map.Entry objects for the sorted spots
         for (int i = 0; i < roots.length; i++) {
-            if (sizes[i] > minSize) {
-                int root = roots[i];
-                int size = sizes[i];
-                sortedSpotMap.add(new AbstractMap.SimpleEntry<>(root, size));
+            if (sizes[i] > minSize) { // If the spot size is greater than minSize, add it to the sortedSpotMap
+                int root = roots[i]; // Get the root of the spot
+                int size = sizes[i]; // Get the size of the spot
+                sortedSpotMap.add(new AbstractMap.SimpleEntry<>(root, size)); // Add a Map.Entry object for the spot to the sortedSpotMap
             }
         }
         return sortedSpotMap;
@@ -322,11 +326,16 @@ public class ImageAdjustments {
     //merge the x and y coordinates of each object
     public void mergeUnionArray( int width) {
         for (int i = 0; i < imagePixels.length; i++) {
+            // If the current pixel is not transparent
             if ( imagePixels[i] != -1) {
+                // Check if the next pixel to the right is not transparent and is within the same row
                 if(i+1 < imagePixels.length && imagePixels[i+1] != -1 && i % width != width - 1)
+                    // Union the current pixel and the next pixel to the right
                     UnionAlgo.union(imagePixels, i, i+1);
 
+                // Check if the pixel below is not transparent
                 if(i+width < imagePixels.length && imagePixels[i+width] != -1)
+                    // Union the current pixel and the pixel below
                     UnionAlgo.union(imagePixels, i, i+width);
             }
         }
